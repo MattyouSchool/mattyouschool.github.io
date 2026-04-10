@@ -2,61 +2,72 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dyloki | Home</title>
+    <title>Dyloki | Premium Platform</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;900&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <nav class="navbar">
         <div class="logo">DYLOKI<span>.</span></div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="games/">Games</a></li>
-            <li><a href="shop/">Coin Shop</a></li>
-            <li><a href="about/">Over Ons</a></li>
+            <li><a href="shop/">Shop</a></li>
+            <li><a href="about/">About</a></li>
         </ul>
-        <div class="user-stats-nav">
+        <div class="user-stats-nav" id="nav-stats">
             <span id="nav-xp">XP: 0</span> | <span id="nav-coins">🪙 0</span>
+            <button onclick="logout()" style="background:none; border:none; color:red; cursor:pointer; margin-left:10px;">X</button>
         </div>
     </nav>
 
-    <header class="hero">
-        <div class="hero-content">
-            <h1>Welkom bij <span class="highlight">Dyloki</span></h1>
-            <p>Het officiële platform van mattyou studios™ & Dylano</p>
-        </div>
-    </header>
-
-    <main class="container">
-        <section class="status-card">
-            <h2>Jouw Progressie</h2>
+    <div id="auth-section" class="container">
+        <div class="status-card">
+            <h1>Toegang tot <span class="highlight">Dyloki</span></h1>
             <div class="grid">
                 <div class="stat-item">
-                    <p>Huidige Rank</p>
-                    <h2 id="rank-display">Laden...</h2>
+                    <h3>Inloggen</h3>
+                    <input type="text" id="log-user" placeholder="Gebruikersnaam"><br>
+                    <input type="password" id="log-pass" placeholder="Wachtwoord"><br>
+                    <button class="buy-btn" onclick="login()">Login</button>
                 </div>
                 <div class="stat-item">
-                    <p>Totaal XP</p>
-                    <h2 id="xp-display">0</h2>
-                </div>
-                <div class="stat-item">
-                    <p>Dyloki Coins</p>
-                    <h2 id="coin-display" style="color: #ffd700;">0</h2>
+                    <h3>Registreren</h3>
+                    <input type="text" id="reg-user" placeholder="Kies naam"><br>
+                    <input type="password" id="reg-pass" placeholder="Wachtwoord"><br>
+                    <button class="buy-btn" onclick="register()">Maak Account</button>
                 </div>
             </div>
-            <p>Voortgang tot volgende Rank:</p>
-            <div class="progress-bar-container">
-                <div id="progress-bar" class="progress-bar"></div>
-            </div>
-        </section>
-    </main>
+        </div>
+    </div>
 
-    <footer>
-        <p>Dyloki is made by <strong>mattyou studios™ x Dylano</strong></p>
-    </footer>
+    <div id="main-content" style="display:none;">
+        <header class="hero">
+            <h1>Welkom terug, <span id="user-welcome" class="highlight">Gamer</span></h1>
+            <p>Jouw Mattyou Studios™ dashboard staat klaar.</p>
+        </header>
+        <main class="container">
+            <section class="status-card">
+                <div class="grid">
+                    <div class="stat-item">
+                        <p>Status</p>
+                        <h2 id="rank-display">Beginner</h2>
+                    </div>
+                    <div class="stat-item">
+                        <p>XP Punten</p>
+                        <h2 id="xp-display">0</h2>
+                    </div>
+                    <div class="stat-item">
+                        <p>Dyloki Balans</p>
+                        <h2 id="coin-display" style="color:#ffd700;">0</h2>
+                    </div>
+                </div>
+                <div class="progress-bar-container"><div id="progress-bar" class="progress-bar"></div></div>
+            </section>
+        </main>
+    </div>
 
+    <footer><p>Dyloki is made by <strong>mattyou studios™ x Dylano</strong></p></footer>
     <script src="script.js"></script>
 </body>
 </html>
