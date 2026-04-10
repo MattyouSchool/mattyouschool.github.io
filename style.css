@@ -23,7 +23,7 @@ body {
     overflow-x: hidden;
 }
 
-/* --- NAVBAR (Logo links, Links midden) --- */
+/* --- NAVBAR --- */
 .navbar {
     display: flex; 
     align-items: center;
@@ -43,12 +43,18 @@ body {
     font-weight: 700; 
     border: 1px solid transparent; 
     padding: 5px 10px; 
-    border-radius: 15px; /* Ronde hoeken */
+    border-radius: 15px;
     cursor: pointer;
     flex: 1;
 }
 
 .logo span { color: var(--cyan); }
+
+/* GLOED EFFECT OP LOGO */
+.logo:hover {
+    border-color: var(--cyan);
+    box-shadow: 0 0 15px var(--cyan-dim);
+}
 
 .nav-links { 
     display: flex; 
@@ -90,21 +96,34 @@ body {
 
 .main-title span { color: var(--cyan); text-shadow: 0 0 25px var(--cyan-dim); }
 
-/* --- GRID & CARDS (Nu naast elkaar en dunner) --- */
+/* --- GRID & INTERACTIVE BORDERS (Blauwe rand bij hover) --- */
 .mission-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: flex; /* Forceert ze naast elkaar */
+    justify-content: center;
     gap: 20px;
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
 }
 
-.mission-card { 
-    background: var(--bg-slate); 
-    padding: 25px; 
-    border-radius: 15px; /* Ronde hoeken */
+.mission-card, .shop-card, .glass-panel {
+    border-radius: 15px;
     border: 1px solid var(--border-light);
+    background: var(--bg-slate);
+    transition: 0.3s;
+}
+
+/* HET BLAUWE RAND EFFECT */
+.interactive-border:hover {
+    border-color: var(--cyan);
+    box-shadow: 0 0 20px var(--cyan-dim);
+    transform: translateY(-5px);
+}
+
+.mission-card { 
+    padding: 25px; 
     text-align: center;
+    flex: 1; /* Zorgt dat ze alle drie even breed zijn */
+    min-width: 250px;
 }
 
 .mission-card h3 { 
@@ -114,13 +133,10 @@ body {
     margin-bottom: 10px; 
 }
 
-/* --- SHOP SPECIFIC --- */
+/* --- SHOP CARDS --- */
 .shop-card {
-    background: linear-gradient(145deg, #0f1115, #050505);
-    border: 1px solid var(--border-light);
     padding: 40px;
     text-align: center;
-    border-radius: 15px;
 }
 
 .price-tag {
@@ -131,24 +147,22 @@ body {
     margin: 15px 0;
 }
 
-/* --- COMMON ELEMENTS --- */
-.glass-panel { 
-    background: rgba(255,255,255,0.03); 
-    padding: 40px; 
-    border-radius: 15px; 
-}
-
+/* --- BUTTONS --- */
 .btn-main, .btn-sub {
-    border-radius: 15px; /* Ronde hoeken */
+    border-radius: 15px;
     padding: 12px 25px;
     font-weight: 800;
     text-decoration: none;
     display: inline-block;
     font-size: 0.85rem;
+    cursor: pointer;
 }
 
 .btn-main { background: var(--cyan); color: #000; border: 1px solid var(--cyan); }
+.btn-main:hover { background: transparent; color: var(--cyan); box-shadow: 0 0 15px var(--cyan-dim); }
+
 .btn-sub { background: transparent; color: #fff; border: 1px solid var(--border-light); }
+.btn-sub:hover { border-color: var(--cyan); box-shadow: 0 0 15px var(--cyan-dim); }
 
 .container { padding: 40px 10%; max-width: 1400px; margin: 0 auto; }
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
