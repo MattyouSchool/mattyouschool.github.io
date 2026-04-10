@@ -23,11 +23,11 @@ body {
     overflow-x: hidden;
 }
 
-/* --- NAVBAR (Logo links, Links gecentreerd) --- */
+/* --- NAVBAR (Logo links, Links midden) --- */
 .navbar {
     display: flex; 
     align-items: center;
-    justify-content: space-between; /* Zorgt voor de spreiding */
+    justify-content: space-between;
     padding: 15px 40px; 
     background: #000;
     border-bottom: 1px solid var(--border-light);
@@ -43,21 +43,19 @@ body {
     font-weight: 700; 
     border: 1px solid transparent; 
     padding: 5px 10px; 
-    border-radius: 4px;
+    border-radius: 15px; /* Ronde hoeken */
     cursor: pointer;
-    flex: 1; /* Neemt ruimte in aan de linkerkant */
+    flex: 1;
 }
 
 .logo span { color: var(--cyan); }
-.logo:hover { border-color: var(--cyan); box-shadow: 0 0 15px var(--cyan-dim); }
 
-/* De links in het midden */
 .nav-links { 
     display: flex; 
     gap: 30px; 
     list-style: none; 
     justify-content: center;
-    flex: 2; /* Geeft de links de meeste ruimte in het midden */
+    flex: 2;
 }
 
 .nav-links a { 
@@ -69,17 +67,12 @@ body {
 }
 
 .nav-links a:hover { color: var(--cyan); text-shadow: 0 0 8px var(--cyan); }
-
-/* Spacer om de balans te houden (voor de rechterkant) */
-.nav-spacer {
-    flex: 1;
-}
-
+.nav-spacer { flex: 1; }
 .highlight-link { color: var(--cyan) !important; }
 
-/* --- HERO SECTION (Kleiner gemaakt) --- */
+/* --- HERO SECTION --- */
 .hero-premium {
-    min-height: 50vh; /* Verlaagd van 70/80 naar 50 voor een compacter uiterlijk */
+    min-height: 50vh; 
     display: flex; 
     align-items: center; 
     justify-content: center;
@@ -88,66 +81,76 @@ body {
     padding: 60px 20px;
 }
 
-.hero-content {
-    max-width: 800px;
-}
-
 .main-title { 
     font-family: 'Syncopate', sans-serif; 
-    font-size: 3rem; /* Iets kleiner gemaakt */
+    font-size: 3rem; 
     letter-spacing: -1px; 
-    line-height: 1.2;
     margin-bottom: 15px;
 }
 
 .main-title span { color: var(--cyan); text-shadow: 0 0 25px var(--cyan-dim); }
 
-.eyebrow { 
+/* --- GRID & CARDS (Nu naast elkaar en dunner) --- */
+.mission-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.mission-card { 
+    background: var(--bg-slate); 
+    padding: 25px; 
+    border-radius: 15px; /* Ronde hoeken */
+    border: 1px solid var(--border-light);
+    text-align: center;
+}
+
+.mission-card h3 { 
     color: var(--cyan); 
-    font-weight: 800; 
-    font-size: 0.65rem; 
-    letter-spacing: 4px; 
-    display: block; 
+    font-family: 'Syncopate', sans-serif; 
+    font-size: 0.75rem; 
     margin-bottom: 10px; 
 }
 
-.hero-description {
-    max-width: 500px;
-    margin: 0 auto 30px;
-    color: var(--text-muted);
-    font-size: 0.95rem;
+/* --- SHOP SPECIFIC --- */
+.shop-card {
+    background: linear-gradient(145deg, #0f1115, #050505);
+    border: 1px solid var(--border-light);
+    padding: 40px;
+    text-align: center;
+    border-radius: 15px;
 }
 
-/* --- BUTTONS --- */
-.cta-group {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
+.price-tag {
+    display: block;
+    font-size: 1.3rem;
+    color: var(--cyan);
+    font-weight: 800;
+    margin: 15px 0;
 }
 
-.btn-main { 
-    background: var(--cyan); color: #000; padding: 12px 25px; 
-    border-radius: 4px; text-decoration: none; font-weight: 800; 
-    font-size: 0.85rem; border: 1px solid var(--cyan);
+/* --- COMMON ELEMENTS --- */
+.glass-panel { 
+    background: rgba(255,255,255,0.03); 
+    padding: 40px; 
+    border-radius: 15px; 
 }
 
-.btn-main:hover { background: transparent; color: var(--cyan); box-shadow: 0 0 20px var(--cyan-dim); }
-
-.btn-sub { 
-    background: transparent; color: #fff; padding: 12px 25px; 
-    border-radius: 4px; text-decoration: none; font-weight: 800; 
-    font-size: 0.85rem; border: 1px solid var(--border-light); 
+.btn-main, .btn-sub {
+    border-radius: 15px; /* Ronde hoeken */
+    padding: 12px 25px;
+    font-weight: 800;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.85rem;
 }
 
-/* --- OVERIG --- */
+.btn-main { background: var(--cyan); color: #000; border: 1px solid var(--cyan); }
+.btn-sub { background: transparent; color: #fff; border: 1px solid var(--border-light); }
+
 .container { padding: 40px 10%; max-width: 1400px; margin: 0 auto; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
 
-.interactive-border { border: 1px solid var(--border-light); }
-.interactive-border:hover { border-color: var(--cyan); box-shadow: 0 0 20px var(--cyan-dim); transform: translateY(-3px); }
-
-.mission-card { background: var(--bg-slate); padding: 30px; border-radius: 8px; }
-.mission-card h3 { color: var(--cyan); font-family: 'Syncopate', sans-serif; font-size: 0.75rem; margin-bottom: 10px; }
-
-.footer-main { padding: 40px 10% 20px; background: #000; border-top: 1px solid var(--border-light); text-align: center; }
-.footer-bottom p { font-size: 0.8rem; color: var(--text-bright); }
+.footer-main { padding: 40px 10%; background: #000; border-top: 1px solid var(--border-light); text-align: center; margin-top: 50px; }
