@@ -7,55 +7,48 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <nav class="navbar">
         <div class="logo">DYLOKI<span>.</span></div>
         <ul class="nav-links">
             <li><a href="../">Home</a></li>
             <li><a href="../games/">Games</a></li>
-            <li><a href="../shop/">Coin Shop</a></li>
-            <li><a href="../about/">Over Ons</a></li>
+            <li><a href="../shop/">Shop</a></li>
+            <li><a href="../about/">About</a></li>
         </ul>
         <div class="user-stats-nav">
             <span id="nav-xp">XP: 0</span> | <span id="nav-coins">🪙 0</span>
         </div>
     </nav>
 
-    <header class="hero">
-        <h1>Dyloki <span class="highlight">Coin Shop</span></h1>
-    </header>
-
     <main class="container">
-        <section class="status-card">
-            <h2>Koop Premium Upgrades</h2>
-            <p>Gebruik je verdiende coins om je profiel te pimpen.</p>
-            <div class="grid">
-                <div class="stat-item">
-                    <h3>Premium Badge</h3>
-                    <p>Toon iedereen dat je een OG bent.</p>
-                    <p><strong>Prijs: 500 Coins</strong></p>
-                    <button class="buy-btn" onclick="buyItem('Premium Badge', 500)">KOOP</button>
-                </div>
-                <div class="stat-item">
-                    <h3>Neon Naam</h3>
-                    <p>Je naam licht op in de ranglijst.</p>
-                    <p><strong>Prijs: 1500 Coins</strong></p>
-                    <button class="buy-btn" onclick="buyItem('Neon Naam', 1500)">KOOP</button>
-                </div>
-                <div class="stat-item">
-                    <h3>XP Booster</h3>
-                    <p>Ontvang tijdelijk dubbele XP.</p>
-                    <p><strong>Prijs: 5000 Coins</strong></p>
-                    <button class="buy-btn" onclick="buyItem('XP Booster', 5000)">KOOP</button>
-                </div>
+        <div class="status-card" style="text-align:center;">
+            <h1>Dyloki <span class="highlight">Black Market</span></h1>
+            <p>Geef je coins uit aan exclusieve Mattyou Studios™ extra's.</p>
+        </div>
+
+        <div class="grid">
+            <div class="stat-item card-hover">
+                <h3>Starter Pack</h3>
+                <p>Een unieke badge bij je naam.</p>
+                <p class="price">🪙 250</p>
+                <button class="buy-btn" onclick="buyItem('Starter Badge', 250)">KOOP</button>
             </div>
-        </section>
+            <div class="stat-item card-hover">
+                <h3>Gold Theme</h3>
+                <p>Verander je interface naar goud.</p>
+                <p class="price">🪙 1000</p>
+                <button class="buy-btn" onclick="buyItem('Gold Theme', 1000)">KOOP</button>
+            </div>
+            <div class="stat-item card-hover">
+                <h3>Ultra Rank</h3>
+                <p>Directe toegang tot beta games.</p>
+                <p class="price">🪙 5000</p>
+                <button class="buy-btn" onclick="buyItem('Ultra Rank', 5000)">KOOP</button>
+            </div>
+        </div>
     </main>
 
-    <footer>
-        <p>Dyloki is made by <strong>mattyou studios™ x Dylano</strong></p>
-    </footer>
-
+    <footer><p>Dyloki is made by <strong>mattyou studios™ x Dylano</strong></p></footer>
     <script src="../script.js"></script>
 </body>
 </html>
