@@ -19,14 +19,14 @@ let currentUser = JSON.parse(localStorage.getItem('dyloki_session')) || null;
 window.register = async function() {
     const user = document.getElementById('reg-user').value.trim().toLowerCase();
     const pass = document.getElementById('reg-pass').value;
-    if (!user || !pass) return alert("VUL ALLE VELDEN IN");
+    if (!user || !pass) return alert("VUL ALLE VELDEN IN!");
 
     const userRef = ref(db, 'accounts/' + user);
     const snap = await get(userRef);
-    if (snap.exists()) return alert("NAAM AL BEZET");
+    if (snap.exists()) return alert("NAAM BESTAAT AL");
 
-    await set(userRef, { username: user, password: pass, xp: 0, coins: 0, rank: "Novice" });
-    alert("ACCOUNT AANGEMAAKT!");
+    await set(userRef, { username: user, password: pass, xp: 0, coins: 0, rank: "NOVICE" });
+    alert("ACCOUNT SUCCESVOL GEREGISTREERD!");
 };
 
 window.login = async function() {
@@ -39,16 +39,18 @@ window.login = async function() {
         currentUser = snap.val();
         localStorage.setItem('dyloki_session', JSON.stringify(currentUser));
         location.reload(); 
-    } else { alert("ONJUISTE GEGEVENS"); }
+    } else { alert("GEGEVENS ONJUIST"); }
 };
 
 window.logout = function() { localStorage.removeItem('dyloki_session'); location.reload(); };
 
+// DIT IS HET XP SYSTEEM DAT ELKE 5 SECONDEN WERKT
 function startPassiveEarning() {
     if (!currentUser) return;
     setInterval(async () => {
-        currentUser.xp += 2; // Iets sneller XP
-        currentUser.coins += 10;
+        currentUser.xp += 5; // Verhoogt XP met 5
+        currentUser.coins += 10; // Verhoogt Coins met 10
+        
         const userRef = ref(db, 'accounts/' + currentUser.username);
         await update(userRef, { xp: currentUser.xp, coins: currentUser.coins });
         localStorage.setItem('dyloki_session', JSON.stringify(currentUser));
@@ -67,12 +69,16 @@ function updateUI() {
         if(document.getElementById('coin-display')) document.getElementById('coin-display').innerText = currentUser.coins;
         if(document.getElementById('user-welcome')) document.getElementById('user-welcome').innerText = currentUser.username.toUpperCase();
 
+        // Rank Berekening
         let rank = "NOVICE";
         if (currentUser.xp >= 10000) rank = "ELITE GHOST";
         else if (currentUser.xp >= 5000) rank = "CYBER LORD";
         else if (currentUser.xp >= 1000) rank = "STRIKER";
+        else if (currentUser.xp >= 500) rank = "AGENT";
 
         if(document.getElementById('rank-display')) document.getElementById('rank-display').innerText = rank;
+        
+        // Progress bar (tot volgende 1000 XP)
         if(document.getElementById('progress-bar')) {
             let progress = (currentUser.xp % 1000) / 10;
             document.getElementById('progress-bar').style.width = progress + "%";
