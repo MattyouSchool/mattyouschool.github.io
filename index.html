@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DYLOKI | Premium Cloud</title>
+    <title>DYLOKI | Core</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Poppins:wght@300;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <nav class="navbar">
         <div class="logo">DY<span>LOKI</span></div>
         <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html" style="color: #00d2ff;">Home</a></li>
             <li><a href="games/index.html">Games</a></li>
             <li><a href="shop/index.html">Shop</a></li>
             <li><a href="about/index.html">About</a></li>
@@ -25,59 +24,30 @@
     <header class="hero-premium">
         <div class="hero-content">
             <h1 class="main-title">DYLOKI</h1>
-            <p class="subtitle">MATTYOU STUDIOS™ X DYLANO</p>
-            <div class="badge-row">
-                <span class="badge">V4.0 CLOUD STABLE</span>
-                <span class="badge">PREMIUM ACCESS</span>
+            <p style="letter-spacing: 8px; font-weight: 300; opacity: 0.8;">MATTYOU STUDIOS™ X DYLANO</p>
+            <div class="badge-row" style="margin-top:20px; display:flex; gap:10px; justify-content:center;">
+                <span class="badge">V5.0 BLUE EDITION</span>
+                <span class="badge">CLOUD ACTIVE</span>
             </div>
         </div>
     </header>
 
     <main class="container">
         <section id="main-content" style="display:none;" class="glass-card">
-            <div class="card-header">
-                <h2>Welkom back, <span id="user-welcome" class="highlight">USER</span></h2>
-                <button onclick="logout()" class="logout-btn">LOGOUT SESSION</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(0,210,255,0.2); padding-bottom:20px; margin-bottom:30px;">
+                <h2 style="font-family:'Syncopate';">WELCOME, <span id="user-welcome" style="color:#00d2ff;">AGENT</span></h2>
+                <button onclick="logout()" style="background:#ff4b2b; color:#fff; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; font-weight:bold;">TERMINATE</button>
             </div>
             <div class="grid">
-                <div class="stat-box">
-                    <h3>Huidige Rank</h3>
-                    <p id="rank-display" class="highlight">Novice</p>
-                </div>
-                <div class="stat-box">
-                    <h3>Totaal XP</h3>
-                    <p id="xp-display">0</p>
-                </div>
-                <div class="stat-box">
-                    <h3>Dyloki Coins</h3>
-                    <p id="coin-display" style="color: #ffd700;">0</p>
-                </div>
+                <div class="stat-box"><h3>RANK</h3><p id="rank-display" style="color:#00d2ff;">...</p></div>
+                <div class="stat-box"><h3>TOTAL XP</h3><p id="xp-display">0</p></div>
+                <div class="stat-box"><h3>COINS</h3><p id="coin-display" style="color:#ffcc00;">0</p></div>
             </div>
-            <div class="progress-container">
-                <div id="progress-bar" class="progress-bar"></div>
-            </div>
-        </section>
-
-        <section class="features-grid">
-            <div class="feature-card">
-                <div class="icon">☁️</div>
-                <h3>Cloud Core</h3>
-                <p>Data sync met Firebase Realtime Database.</p>
-            </div>
-            <div class="feature-card">
-                <div class="icon">⚡</div>
-                <h3>Active</h3>
-                <p>Verdien coins door simpelweg online te zijn.</p>
-            </div>
-            <div class="feature-card">
-                <div class="icon">💎</div>
-                <h3>Premium</h3>
-                <p>Custom UI voor Mattyou Studios™ x Dylano.</p>
-            </div>
+            <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
         </section>
 
         <section id="auth-section" class="glass-card">
-            <h2 class="auth-title">IDENTITY ACCESS</h2>
+            <h2 style="text-align:center; margin-bottom:30px; font-family:'Syncopate'; letter-spacing:4px;">IDENTITY ACCESS</h2>
             <div class="grid">
                 <div class="auth-box">
                     <h3>LOGIN</h3>
@@ -87,17 +57,16 @@
                 </div>
                 <div class="auth-box">
                     <h3>REGISTER</h3>
-                    <input type="text" id="reg-user" placeholder="New Username">
-                    <input type="password" id="reg-pass" placeholder="New Password">
-                    <button class="btn-secondary" onclick="register()">CREATE IDENTITY</button>
+                    <input type="text" id="reg-user" placeholder="Username">
+                    <input type="password" id="reg-pass" placeholder="Password">
+                    <button class="btn-secondary" onclick="register()">CREATE ACCOUNT</button>
                 </div>
             </div>
         </section>
     </main>
 
     <footer class="footer-premium">
-        <p>Made by <strong>mattyou studios™ x Dylano</strong></p>
-        <p class="version">BUILD V4.0 // CLOUD ENABLED</p>
+        <p>MADE BY <strong>MATTYOU STUDIOS™ X DYLANO</strong></p>
     </footer>
 
     <script type="module" src="script.js"></script>
