@@ -1,83 +1,62 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>MattyouSchool Webgame Platform</title>
-  <style>
-    body { font-family: Arial,sans-serif; max-width:500px; margin:2em auto; background: #e6f0ff;}
-    .box {background:white; border-radius:8px; box-shadow: 0 1px 8px #0002; padding:2em; margin-bottom:1.5em;}
-    h2 {margin-top:0;}
-    button {margin:.7em 0; padding:.6em 1.1em; border-radius:5px; background:#348ef5; color:white; border:0;}
-    li {margin: .25em 0;}
-    #board {padding:0;}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dyloki | Premium Gaming Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="box" id="app"></div>
-  <script>
-    // Unieke ID voor je lokale speler
-    function getPlayer() {
-      let player = JSON.parse(localStorage.getItem('ms_player'));
-      if (!player) {
-        player = {
-          coins: 100,
-          xp: 0,
-          name: 'Jij',
-          created: Date.now(),
-        };
-        localStorage.setItem('ms_player', JSON.stringify(player));
-      }
-      return player;
-    }
-    function setPlayer(player) {
-      localStorage.setItem('ms_player', JSON.stringify(player));
-    }
 
-    // Eenvoudig leaderboard per browser (optioneel, werkt alleen indien meerdere profielen ooit aangemaakt!)
-    function getLocalLeaderboard() {
-      // Je eigen score als enige entry
-      const player = getPlayer();
-      return [{
-        name: player.name,
-        coins: player.coins,
-        xp: player.xp
-      }];
-    }
-
-    function render() {
-      const player = getPlayer();
-      const leaderboard = getLocalLeaderboard();
-
-      const root = document.getElementById('app');
-      root.innerHTML = `
-        <h2>Welkom op het MattyouSchool Webgame Platform!</h2>
-        <div>
-          <strong>Coins:</strong> <span id="coins">${player.coins}</span>
-           &nbsp;|&nbsp;
-          <strong>XP:</strong> <span id="xp">${player.xp}</span>
+    <nav class="navbar">
+        <div class="logo">DYLOKI<span>.</span></div>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="games.html">Games</a></li>
+            <li><a href="shop.html">Coin Shop</a></li>
+            <li><a href="about.html">Over Ons</a></li>
+        </ul>
+        <div class="user-stats-nav">
+            <span id="nav-xp">XP: 0</span>
+            <span id="nav-coins" class="coin-text">🪙 0</span>
         </div>
-        <button id="playBtn">Speel mini-game!</button>
-        <h3>Leaderboard (alleen deze browser)</h3>
-        <ol id="board">
-          ${leaderboard.map(u => `<li>${u.name}: ${u.xp} XP, ${u.coins} coins</li>`).join("")}
-        </ol>
-        <p style="font-size:0.9em;color:gray;">Let op: alles wordt alleen opgeslagen in deze browser. Verwijder je cache/opslag, dan zijn coins/xp weg.</p>
-      `;
+    </nav>
 
-      document.getElementById('playBtn').onclick = () => {
-        // Simpele random beloning
-        const coinsGained = Math.floor(Math.random()*16)+5;   // 5..20
-        const xpGained = Math.floor(Math.random()*31)+10;     // 10..40
-        player.coins += coinsGained;
-        player.xp += xpGained;
-        setPlayer(player);
-        render();
-        alert(`Je hebt ${coinsGained} coins en ${xpGained} XP gewonnen!`);
-      };
-    }
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Welkom bij de toekomst van <span class="highlight">Gaming</span></h1>
+            <p>Verdien XP door simpelweg aanwezig te zijn en ontgrendel legendarische ranks.</p>
+        </div>
+    </header>
 
-    render();
-  </script>
+    <main class="container">
+        <section class="status-card">
+            <h2>Jouw Profiel</h2>
+            <div class="grid">
+                <div class="stat-item">
+                    <p>Huidige Rank</p>
+                    <h3 id="rank-display" class="glow-text">Beginner</h3>
+                </div>
+                <div class="stat-item">
+                    <p>Totaal XP</p>
+                    <h3 id="xp-display">0</h3>
+                </div>
+                <div class="stat-item">
+                    <p>Dyloki Coins</p>
+                    <h3 id="coin-display" class="coin-text">0</h3>
+                </div>
+            </div>
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Dyloki is made by <strong>mattyou studios™ x Dylano</strong></p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
