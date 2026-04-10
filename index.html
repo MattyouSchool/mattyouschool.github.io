@@ -3,106 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dyloki | Premium Platform</title>
+    <title>DYLOKI | Core Platform</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Poppins:wght@300;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="logo">DY<span>LOKI</span></div>
+        <div class="logo">DYLOKI<span>_</span></div>
         <ul class="nav-links">
-            <li><a href="index.html" class="active">Home</a></li>
-            <li><a href="games/">Games</a></li>
-            <li><a href="shop/">Shop</a></li>
-            <li><a href="about/">About</a></li>
+            <li><a href="index.html" class="active">HOME</a></li>
+            <li><a href="games/">GAMES</a></li>
+            <li><a href="shop/">SHOP</a></li>
+            <li><a href="about/">ABOUT</a></li>
         </ul>
-        <div class="user-stats-nav">
-            <span id="nav-xp">XP: 0</span> | <span id="nav-coins">🪙 0</span>
+        <div class="user-status-bar">
+            <div class="status-pill"><span class="dot"></span> <span id="nav-xp">XP: 0</span></div>
+            <div class="status-pill coin-pill">🪙 <span id="nav-coins">0</span></div>
         </div>
     </nav>
 
-    <div class="hero-premium">
-        <div class="hero-overlay"></div>
+    <header class="main-hero">
+        <div class="hero-blur"></div>
         <div class="hero-content">
-            <h1 class="main-title">DYLOKI</h1>
-            <p class="subtitle">POWERED BY MATTYOU STUDIOS™ X DYLANO</p>
-            <div class="badge-row">
-                <span class="badge">V4.0 CLOUD</span>
-                <span class="badge">PREMIUM UI</span>
-                <span class="badge">REAL-TIME</span>
-            </div>
+            <h1 class="glitch" data-text="DYLOKI">DYLOKI</h1>
+            <p class="tagline">The next generation of gaming by <span>mattyou studios™ x Dylano</span></p>
         </div>
-    </div>
+    </header>
 
-    <main class="container">
+    <main class="content-wrapper">
         
-        <section id="main-content" style="display:none;">
-            <div class="glass-card dashboard">
-                <div class="card-header">
-                    <h2>Welkom, <span id="user-welcome" class="highlight">Gamer</span></h2>
-                    <button onclick="logout()" class="logout-btn">Logout</button>
+        <section id="main-content" style="display:none;" class="glass-panel dashboard-panel">
+            <div class="panel-header">
+                <h2>WELCOME BACK, <span id="user-welcome">AGENT</span></h2>
+                <button onclick="logout()" class="btn-logout">TERMINATE SESSION</button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="label">CURRENT RANK</span>
+                    <h3 id="rank-display" class="neon-text">INITIALIZING...</h3>
                 </div>
-                <div class="grid">
-                    <div class="stat-box">
-                        <p>Huidige Rank</p>
-                        <h3 id="rank-display" class="glow-text">Novice</h3>
-                    </div>
-                    <div class="stat-box">
-                        <p>Totaal XP</p>
-                        <h3 id="xp-display">0</h3>
-                    </div>
-                    <div class="stat-box">
-                        <p>Coins</p>
-                        <h3 id="coin-display" class="coin-glow">0</h3>
-                    </div>
+                <div class="stat-card">
+                    <span class="label">EXPERIENCE</span>
+                    <h3 id="xp-display">0</h3>
                 </div>
-                <div class="progress-container">
-                    <div id="progress-bar" class="progress-bar"></div>
+                <div class="stat-card">
+                    <span class="label">CREDITS</span>
+                    <h3 id="coin-display" class="gold-text">0</h3>
                 </div>
+            </div>
+            
+            <div class="xp-bar-wrapper">
+                <div class="xp-bar-fill" id="progress-bar"></div>
             </div>
         </section>
 
-        <section class="features">
-            <div class="feature-card">
-                <div class="icon">⚡</div>
-                <h3>Cloud Sync</h3>
-                <p>Al je progressie wordt direct opgeslagen in onze Firebase servers.</p>
+        <section class="feature-row">
+            <div class="feature-box">
+                <div class="f-icon">01</div>
+                <h4>Cloud Core</h4>
+                <p>Jouw data leeft in de cloud. Altijd en overal toegang tot je stats.</p>
             </div>
-            <div class="feature-card">
-                <div class="icon">🏆</div>
-                <h3>Level Up</h3>
-                <p>Verdien 10 XP per minuut en stijg in de wereldwijde rankings.</p>
+            <div class="feature-box">
+                <div class="f-icon">02</div>
+                <h4>Active Earning</h4>
+                <p>Verdien credits door simpelweg verbonden te blijven met Dyloki.</p>
             </div>
-            <div class="feature-card">
-                <div class="icon">💎</div>
-                <h3>Economy</h3>
-                <p>Verzamel Dyloki Coins en koop unieke items in de shop.</p>
+            <div class="feature-box">
+                <div class="f-icon">03</div>
+                <h4>Exclusives</h4>
+                <p>Unlock items die alleen beschikbaar zijn voor onze community.</p>
             </div>
         </section>
 
-        <section id="auth-section" class="glass-card">
-            <h2 class="section-title">Word een <span class="highlight">Legende</span></h2>
-            <div class="grid">
-                <div class="auth-box">
-                    <h3>Inloggen</h3>
-                    <input type="text" id="log-user" placeholder="Gebruikersnaam">
-                    <input type="password" id="log-pass" placeholder="Wachtwoord">
-                    <button class="btn-primary" onclick="login()">Enter Dyloki</button>
+        <section id="auth-section" class="glass-panel auth-panel">
+            <div class="auth-grid">
+                <div class="auth-form">
+                    <h3>ACCESS ACCOUNT</h3>
+                    <div class="input-group">
+                        <input type="text" id="log-user" placeholder="USERNAME" spellcheck="false">
+                        <input type="password" id="log-pass" placeholder="PASSWORD">
+                    </div>
+                    <button class="btn-main" onclick="login()">LOGIN SYSTEM</button>
                 </div>
-                <div class="auth-box">
-                    <h3>Registreren</h3>
-                    <input type="text" id="reg-user" placeholder="Kies Gebruikersnaam">
-                    <input type="password" id="reg-pass" placeholder="Kies Wachtwoord">
-                    <button class="btn-secondary" onclick="register()">Create Account</button>
+                
+                <div class="auth-divider">OR</div>
+
+                <div class="auth-form">
+                    <h3>CREATE IDENTITY</h3>
+                    <div class="input-group">
+                        <input type="text" id="reg-user" placeholder="NEW USERNAME" spellcheck="false">
+                        <input type="password" id="reg-pass" placeholder="NEW PASSWORD">
+                    </div>
+                    <button class="btn-sub" onclick="register()">REGISTER DATABASE</button>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="footer-premium">
-        <p>Made by <strong>mattyou studios™ x Dylano</strong></p>
-        <p class="copyright">© 2026 DYLOKI CLOUD SYSTEMS</p>
+    <footer class="minimal-footer">
+        <div class="footer-line"></div>
+        <p>MADE BY <strong>MATTYOU STUDIOS™ X DYLANO</strong></p>
+        <span class="version">V4.0 // STABLE BUILD</span>
     </footer>
 
     <script type="module" src="script.js"></script>
