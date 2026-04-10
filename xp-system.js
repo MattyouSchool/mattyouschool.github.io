@@ -1,32 +1,39 @@
-// INITIALISATIE
-let xp = parseInt(localStorage.getItem('user_xp')) || 0;
+// Laad XP in vanuit localStorage, of start op 0 als er niets is
+let xp = parseInt(localStorage.getItem('dyloki_xp')) || 0;
 
-function updateStats() {
-    // XP Opslaan
-    localStorage.setItem('user_xp', xp);
-    
-    // UI Updaten
-    const xpDisplay = document.getElementById('xp-counter');
-    const rankDisplay = document.getElementById('rank-tag');
-    
-    if(xpDisplay) xpDisplay.innerText = `XP: ${xp}`;
-    
-    // RANK BEREKENING
+function updateUI() {
+    // UI Elementen ophalen
+    const xpCounter = document.getElementById('xp-counter');
+    const rankTag = document.getElementById('rank-tag');
+
+    // XP Display updaten
+    if (xpCounter) {
+        xpCounter.innerText = `XP: ${xp}`;
+    }
+
+    // Rank berekenen op basis van XP
     let rank = "ROOKIE";
     if (xp >= 100) rank = "AGENT";
     if (xp >= 500) rank = "ELITE";
-    if (xp >= 1000) rank = "MASTER";
+    if (xp >= 1500) rank = "MASTER";
     if (xp >= 5000) rank = "LEGEND";
-    
-    if(rankDisplay) rankDisplay.innerText = `RANK: ${rank}`;
+    if (xp >= 10000) rank = "OVERLORD";
+
+    // Rank Display updaten
+    if (rankTag) {
+        rankTag.innerText = `RANK: ${rank}`;
+    }
+
+    // Opslaan in LocalStorage
+    localStorage.setItem('dyloki_xp', xp);
 }
 
-// ELKE MINUUT 10 XP GEVEN
+// Elke 60 seconden (1 minuut) 10 XP toevoegen
 setInterval(() => {
     xp += 10;
-    console.log("10 XP verdiend voor online zijn!");
-    updateStats();
-}, 60000); // 60.000 ms = 1 minuut
+    console.log("+10 XP verdiend! Totaal: " + xp);
+    updateUI();
+}, 60000);
 
-// DIRECT LADEN BIJ OPENEN PAGINA
-updateStats();
+// Roep direct aan bij het laden van de pagina
+updateUI();
