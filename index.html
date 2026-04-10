@@ -3,78 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DYLOKI | Ultra Premium Core</title>
+    <title>DYLOKI | Omni-Premium</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Poppins:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Poppins:wght@300;600;900&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar">
         <div class="logo">DY<span>LOKI</span></div>
         <ul class="nav-links">
-            <li><a href="index.html" style="color: var(--primary-blue); opacity: 1;">Home</a></li>
+            <li><a href="index.html">Home</a></li>
             <li><a href="games/index.html">Games</a></li>
             <li><a href="shop/index.html">Shop</a></li>
             <li><a href="about/index.html">About</a></li>
         </ul>
-        <div class="user-stats-nav">
-            <span id="nav-xp">XP: 0</span> | <span id="nav-coins">🪙 0</span>
-        </div>
+        <div class="user-stats-nav"><span id="nav-xp">XP: 0</span> | <span id="nav-coins">🪙 0</span></div>
     </nav>
 
-    <header class="hero-premium">
-        <div class="hero-content">
-            <h1 class="main-title">DYLOKI</h1>
-            <p style="letter-spacing: 12px; font-weight: 300; color: rgba(255,255,255,0.8);">MATTYOU STUDIOS™ X DYLANO</p>
-            <p style="font-size: 0.7rem; color: var(--primary-blue); letter-spacing: 3px; margin-top: 5px;">ULTIMATE EDITION V6.0</p>
-        </div>
+    <header class="container" style="text-align: center; padding-top: 100px;">
+        <h1 class="logo" style="font-size: 5rem; margin-bottom: 20px;">DY<span>LOKI</span></h1>
+        <p style="letter-spacing: 15px; opacity: 0.5;">PREMIUM CLOUD INTERFACE</p>
     </header>
 
     <main class="container">
         <section id="main-content" style="display:none;" class="glass-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(0,210,255,0.2); padding-bottom:25px; margin-bottom:40px;">
-                <h2 style="font-family:'Syncopate'; letter-spacing: 3px;">CONNECTED AGENT: <span id="user-welcome" style="color:var(--primary-blue);">---</span></h2>
-                <button onclick="logout()" style="background:#ff4b2b; color:#fff; border:none; padding:10px 20px; border-radius:12px; cursor:pointer; font-weight:bold; letter-spacing: 1px;">LOGOUT SESSION</button>
-            </div>
+            <h2 style="margin-bottom:30px; font-family:'Syncopate';">WELCOME, <span id="user-welcome" style="color:var(--primary);">AGENT</span></h2>
             <div class="grid">
-                <div class="stat-box">
-                    <h3>SYSTEM RANK</h3>
-                    <p id="rank-display" style="color:var(--primary-blue); text-shadow: 0 0 10px var(--primary-blue);">...</p>
-                </div>
-                <div class="stat-box">
-                    <h3>TOTAL EXPERIENCE</h3>
-                    <p id="xp-display">0</p>
-                </div>
-                <div class="stat-box">
-                    <h3>CORE CREDITS</h3>
-                    <p id="coin-display" style="color:var(--gold); text-shadow: 0 0 10px rgba(255,204,0,0.5);">0</p>
-                </div>
+                <div class="stat-box"><h3>RANK</h3><p id="rank-display" style="color:var(--primary); font-size: 2rem; font-weight: 900;">---</p></div>
+                <div class="stat-box"><h3>XP</h3><p id="xp-display" style="font-size: 2rem; font-weight: 900;">0</p></div>
+                <div class="stat-box"><h3>COINS</h3><p id="coin-display" style="color:#ffd700; font-size: 2rem; font-weight: 900;">0</p></div>
             </div>
             <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
+            <button onclick="logout()" style="margin-top:30px; background:transparent; border:1px solid #ff4b2b; color:#ff4b2b; padding:10px 20px; border-radius:10px; cursor:pointer;">DISCONNECT SESSION</button>
         </section>
 
         <section id="auth-section" class="glass-card">
-            <h2 style="text-align:center; margin-bottom:50px; font-family:'Syncopate'; letter-spacing:5px;">CLOUD DATABASE ACCESS</h2>
             <div class="grid">
                 <div class="auth-box">
-                    <h3 style="margin-bottom:25px; font-family:'Syncopate'; font-size: 1rem;">RETURNING USER</h3>
+                    <h2 style="margin-bottom:20px; font-family:'Syncopate';">LOGIN</h2>
                     <input type="text" id="log-user" placeholder="Username">
                     <input type="password" id="log-pass" placeholder="Password">
-                    <button class="btn-primary" onclick="login()">LOGIN TO DYLOKI</button>
+                    <button class="btn-primary" onclick="login()">ENTER SYSTEM</button>
                 </div>
                 <div class="auth-box">
-                    <h3 style="margin-bottom:25px; font-family:'Syncopate'; font-size: 1rem;">NEW CORE ACCOUNT</h3>
-                    <input type="text" id="reg-user" placeholder="New Username">
-                    <input type="password" id="reg-pass" placeholder="New Password">
-                    <button class="btn-secondary" onclick="register()">CREATE IDENTITY</button>
+                    <h2 style="margin-bottom:20px; font-family:'Syncopate';">REGISTER</h2>
+                    <input type="text" id="reg-user" placeholder="Choose Username">
+                    <input type="password" id="reg-pass" placeholder="Choose Password">
+                    <button class="btn-primary" onclick="register()">CREATE IDENTITY</button>
                 </div>
             </div>
         </section>
     </main>
-
-    <footer class="footer-premium">
-        <p style="letter-spacing: 2px; font-weight: 300;">BUILD BY <strong>MATTYOU STUDIOS™ X DYLANO</strong></p>
-        <p style="font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 10px;">CORE ENGINE V6.0 // STABLE BUILD</p>
-    </footer>
 
     <script type="module" src="script.js"></script>
 </body>
