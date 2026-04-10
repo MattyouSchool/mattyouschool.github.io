@@ -3,111 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DYLOKI | Core Platform</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Dyloki | Premium Platform</title>
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Poppins:wght@300;600;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="logo">DYLOKI<span>_</span></div>
+        <div class="logo">DY<span>LOKI</span></div>
         <ul class="nav-links">
-            <li><a href="index.html" class="active">HOME</a></li>
-            <li><a href="games/">GAMES</a></li>
-            <li><a href="shop/">SHOP</a></li>
-            <li><a href="about/">ABOUT</a></li>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./games/index.html">Games</a></li>
+            <li><a href="./shop/index.html">Shop</a></li>
+            <li><a href="./about/index.html">About</a></li>
         </ul>
-        <div class="user-status-bar">
-            <div class="status-pill"><span class="dot"></span> <span id="nav-xp">XP: 0</span></div>
-            <div class="status-pill coin-pill">🪙 <span id="nav-coins">0</span></div>
+        <div class="user-stats-nav">
+            <span id="nav-xp">XP: 0</span> | <span id="nav-coins">🪙 0</span>
         </div>
     </nav>
 
-    <header class="main-hero">
-        <div class="hero-blur"></div>
+    <header class="hero-premium">
         <div class="hero-content">
-            <h1 class="glitch" data-text="DYLOKI">DYLOKI</h1>
-            <p class="tagline">The next generation of gaming by <span>mattyou studios™ x Dylano</span></p>
+            <h1 class="main-title">DYLOKI</h1>
+            <p class="subtitle">MATTYOU STUDIOS™ X DYLANO</p>
+            <div class="badge-row">
+                <span class="badge">V4.0 CLOUD</span>
+                <span class="badge">STABLE</span>
+            </div>
         </div>
     </header>
 
-    <main class="content-wrapper">
-        
-        <section id="main-content" style="display:none;" class="glass-panel dashboard-panel">
-            <div class="panel-header">
-                <h2>WELCOME BACK, <span id="user-welcome">AGENT</span></h2>
-                <button onclick="logout()" class="btn-logout">TERMINATE SESSION</button>
+    <main class="container">
+        <section id="main-content" style="display:none;" class="glass-card dashboard">
+            <div class="card-header">
+                <h2>Welkom, <span id="user-welcome" class="highlight">Gamer</span></h2>
+                <button onclick="logout()" class="logout-btn">LOGOUT</button>
             </div>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="label">CURRENT RANK</span>
-                    <h3 id="rank-display" class="neon-text">INITIALIZING...</h3>
-                </div>
-                <div class="stat-card">
-                    <span class="label">EXPERIENCE</span>
-                    <h3 id="xp-display">0</h3>
-                </div>
-                <div class="stat-card">
-                    <span class="label">CREDITS</span>
-                    <h3 id="coin-display" class="gold-text">0</h3>
-                </div>
+            <div class="grid">
+                <div class="stat-box"><h3>Rank</h3><p id="rank-display">Novice</p></div>
+                <div class="stat-box"><h3>XP</h3><p id="xp-display">0</p></div>
+                <div class="stat-box"><h3>Coins</h3><p id="coin-display">0</p></div>
             </div>
-            
-            <div class="xp-bar-wrapper">
-                <div class="xp-bar-fill" id="progress-bar"></div>
-            </div>
+            <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
         </section>
 
-        <section class="feature-row">
-            <div class="feature-box">
-                <div class="f-icon">01</div>
-                <h4>Cloud Core</h4>
-                <p>Jouw data leeft in de cloud. Altijd en overal toegang tot je stats.</p>
-            </div>
-            <div class="feature-box">
-                <div class="f-icon">02</div>
-                <h4>Active Earning</h4>
-                <p>Verdien credits door simpelweg verbonden te blijven met Dyloki.</p>
-            </div>
-            <div class="feature-box">
-                <div class="f-icon">03</div>
-                <h4>Exclusives</h4>
-                <p>Unlock items die alleen beschikbaar zijn voor onze community.</p>
-            </div>
+        <section class="features">
+            <div class="feature-card"><h3>Cloud Core</h3><p>Data sync met Firebase.</p></div>
+            <div class="feature-card"><h3>Active</h3><p>Verdien coins door online te zijn.</p></div>
+            <div class="feature-card"><h3>Premium</h3><p>Custom UI voor Mattyou Studios.</p></div>
         </section>
 
-        <section id="auth-section" class="glass-panel auth-panel">
-            <div class="auth-grid">
-                <div class="auth-form">
-                    <h3>ACCESS ACCOUNT</h3>
-                    <div class="input-group">
-                        <input type="text" id="log-user" placeholder="USERNAME" spellcheck="false">
-                        <input type="password" id="log-pass" placeholder="PASSWORD">
-                    </div>
-                    <button class="btn-main" onclick="login()">LOGIN SYSTEM</button>
+        <section id="auth-section" class="glass-card">
+            <h2 style="text-align:center; margin-bottom:30px;">IDENTITY ACCESS</h2>
+            <div class="grid">
+                <div class="auth-box">
+                    <h3>Login</h3>
+                    <input type="text" id="log-user" placeholder="Username">
+                    <input type="password" id="log-pass" placeholder="Password">
+                    <button class="btn-primary" onclick="login()">ENTER SYSTEM</button>
                 </div>
-                
-                <div class="auth-divider">OR</div>
-
-                <div class="auth-form">
-                    <h3>CREATE IDENTITY</h3>
-                    <div class="input-group">
-                        <input type="text" id="reg-user" placeholder="NEW USERNAME" spellcheck="false">
-                        <input type="password" id="reg-pass" placeholder="NEW PASSWORD">
-                    </div>
-                    <button class="btn-sub" onclick="register()">REGISTER DATABASE</button>
+                <div class="auth-box">
+                    <h3>Register</h3>
+                    <input type="text" id="reg-user" placeholder="Choose Username">
+                    <input type="password" id="reg-pass" placeholder="Password">
+                    <button class="btn-secondary" onclick="register()">CREATE ACCOUNT</button>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="minimal-footer">
-        <div class="footer-line"></div>
-        <p>MADE BY <strong>MATTYOU STUDIOS™ X DYLANO</strong></p>
-        <span class="version">V4.0 // STABLE BUILD</span>
+    <footer class="footer-premium">
+        <p>Made by <strong>mattyou studios™ x Dylano</strong></p>
     </footer>
 
-    <script type="module" src="script.js"></script>
+    <script type="module" src="./script.js"></script>
 </body>
 </html>
