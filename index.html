@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DYLOKI | Omni-Premium</title>
+    <title>DYLOKI | Omni-Cloud</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Poppins:wght@300;600;900&display=swap" rel="stylesheet">
 </head>
@@ -19,21 +19,21 @@
         <div class="user-stats-nav"><span id="nav-xp">XP: 0</span> | <span id="nav-coins">🪙 0</span></div>
     </nav>
 
-    <header class="container" style="text-align: center; padding-top: 100px;">
-        <h1 class="logo" style="font-size: 5rem; margin-bottom: 20px;">DY<span>LOKI</span></h1>
-        <p style="letter-spacing: 15px; opacity: 0.5;">PREMIUM CLOUD INTERFACE</p>
+    <header class="container" style="text-align: center; padding: 60px 0;">
+        <h1 style="font-family: 'Syncopate'; font-size: 4rem; letter-spacing: 10px;">DYLOKI<span>_</span>CORE</h1>
+        <p style="opacity: 0.6; letter-spacing: 5px;">THE NEXT GEN INTERFACE BY MATTYOU STUDIOS</p>
     </header>
 
     <main class="container">
         <section id="main-content" style="display:none;" class="glass-card">
-            <h2 style="margin-bottom:30px; font-family:'Syncopate';">WELCOME, <span id="user-welcome" style="color:var(--primary);">AGENT</span></h2>
+            <h2 style="margin-bottom:20px; font-family:'Syncopate';">SESSION ACTIVE: <span id="user-welcome" style="color:var(--primary);">---</span></h2>
             <div class="grid">
-                <div class="stat-box"><h3>RANK</h3><p id="rank-display" style="color:var(--primary); font-size: 2rem; font-weight: 900;">---</p></div>
-                <div class="stat-box"><h3>XP</h3><p id="xp-display" style="font-size: 2rem; font-weight: 900;">0</p></div>
-                <div class="stat-box"><h3>COINS</h3><p id="coin-display" style="color:#ffd700; font-size: 2rem; font-weight: 900;">0</p></div>
+                <div class="stat-box"><h3>RANK</h3><p id="rank-display" style="color:var(--primary); font-size: 1.5rem; font-weight: 900;">---</p></div>
+                <div class="stat-box"><h3>XP</h3><p id="xp-display" style="font-size: 1.5rem; font-weight: 900;">0</p></div>
+                <div class="stat-box"><h3>COINS</h3><p id="coin-display" style="color:#ffd700; font-size: 1.5rem; font-weight: 900;">0</p></div>
             </div>
             <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
-            <button onclick="logout()" style="margin-top:30px; background:transparent; border:1px solid #ff4b2b; color:#ff4b2b; padding:10px 20px; border-radius:10px; cursor:pointer;">DISCONNECT SESSION</button>
+            <button onclick="logout()" style="margin-top:20px; background:none; border:1px solid #ff4b2b; color:#ff4b2b; padding:10px; border-radius:8px; cursor:pointer;">END SESSION</button>
         </section>
 
         <section id="auth-section" class="glass-card">
@@ -48,10 +48,26 @@
                     <h2 style="margin-bottom:20px; font-family:'Syncopate';">REGISTER</h2>
                     <input type="text" id="reg-user" placeholder="Choose Username">
                     <input type="password" id="reg-pass" placeholder="Choose Password">
-                    <button class="btn-primary" onclick="register()">CREATE IDENTITY</button>
+                    <button class="btn-primary" onclick="register()">CREATE ACCOUNT</button>
                 </div>
             </div>
         </section>
+
+        <div class="grid">
+            <div class="feature-item">
+                <h3>CLOUD CORE</h3>
+                <p style="font-size: 0.8rem; opacity: 0.7;">Al je data wordt real-time gesynct met onze Europese Firebase servers.</p>
+                <span class="status-online">● Online</span>
+            </div>
+            <div class="feature-item">
+                <h3>ACTIVE EARNING</h3>
+                <p style="font-size: 0.8rem; opacity: 0.7;">Verdien automatisch coins en XP terwijl je verbonden bent met het platform.</p>
+            </div>
+            <div class="feature-item">
+                <h3>MATTYOU EXCLUSIVES</h3>
+                <p style="font-size: 0.8rem; opacity: 0.7;">Toegang tot unieke shop items die alleen beschikbaar zijn voor onze community.</p>
+            </div>
+        </div>
     </main>
 
     <script type="module" src="script.js"></script>
