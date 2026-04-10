@@ -19,33 +19,51 @@
         <div class="user-stats-nav"><span id="nav-xp">XP: 0</span> | <span id="nav-coins">🪙 0</span></div>
     </nav>
 
-    <header class="container" style="text-align: center; padding: 60px 0;">
-        <h1 style="font-family: 'Syncopate'; font-size: 4rem; letter-spacing: 10px;">DYLOKI<span>_</span>CORE</h1>
-        <p style="opacity: 0.6; letter-spacing: 5px;">THE NEXT GEN INTERFACE BY MATTYOU STUDIOS</p>
+    <header class="container" style="text-align: center; padding: 60px 0 20px 0;">
+        <h1 style="font-family: 'Syncopate'; font-size: 4.5rem; letter-spacing: 10px; margin: 0;">DY<span>LOKI</span></h1>
+        <p style="opacity: 0.5; letter-spacing: 8px; font-size: 0.8rem;">PREMIUM INTERFACE BY MATTYOU STUDIOS</p>
     </header>
 
     <main class="container">
+        
+        <section id="info-section" class="grid" style="margin-bottom: 40px;">
+            <div class="feature-item">
+                <h3 style="color: var(--primary); font-family: 'Syncopate'; font-size: 0.9rem; margin-bottom: 10px;">01 CLOUD CORE</h3>
+                <p style="font-size: 0.85rem; opacity: 0.7;">Je data leeft in de cloud. Altijd en overal toegang tot je stats via onze beveiligde Firebase servers.</p>
+                <span class="status-online" style="margin-top: 10px; display: block;">● DATABASE ONLINE</span>
+            </div>
+            <div class="feature-item">
+                <h3 style="color: var(--primary); font-family: 'Syncopate'; font-size: 0.9rem; margin-bottom: 10px;">02 ACTIVE EARNING</h3>
+                <p style="font-size: 0.85rem; opacity: 0.7;">Verdien credits door simpelweg verbonden te blijven met Dyloki. Hoe langer online, hoe meer coins.</p>
+            </div>
+            <div class="feature-item">
+                <h3 style="color: var(--primary); font-family: 'Syncopate'; font-size: 0.9rem; margin-bottom: 10px;">03 EXCLUSIVES</h3>
+                <p style="font-size: 0.85rem; opacity: 0.7;">Unlock items die alleen beschikbaar zijn voor onze community. Custom UI voor Mattyou Studios.</p>
+            </div>
+        </section>
+
         <section id="main-content" style="display:none;" class="glass-card">
             <h2 style="margin-bottom:20px; font-family:'Syncopate';">SESSION ACTIVE: <span id="user-welcome" style="color:var(--primary);">---</span></h2>
             <div class="grid">
-                <div class="stat-box"><h3>RANK</h3><p id="rank-display" style="color:var(--primary); font-size: 1.5rem; font-weight: 900;">---</p></div>
-                <div class="stat-box"><h3>XP</h3><p id="xp-display" style="font-size: 1.5rem; font-weight: 900;">0</p></div>
-                <div class="stat-box"><h3>COINS</h3><p id="coin-display" style="color:#ffd700; font-size: 1.5rem; font-weight: 900;">0</p></div>
+                <div class="stat-box"><h3>RANK</h3><p id="rank-display" style="color:var(--primary); font-size: 1.8rem; font-weight: 900;">---</p></div>
+                <div class="stat-box"><h3>XP</h3><p id="xp-display" style="font-size: 1.8rem; font-weight: 900;">0</p></div>
+                <div class="stat-box"><h3>COINS</h3><p id="coin-display" style="color:#ffd700; font-size: 1.8rem; font-weight: 900;">0</p></div>
             </div>
             <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
-            <button onclick="logout()" style="margin-top:20px; background:none; border:1px solid #ff4b2b; color:#ff4b2b; padding:10px; border-radius:8px; cursor:pointer;">END SESSION</button>
+            <button onclick="logout()" style="margin-top:30px; background:none; border:1px solid #ff4b2b; color:#ff4b2b; padding:12px 25px; border-radius:10px; cursor:pointer; font-weight: bold;">TERMINATE CONNECTION</button>
         </section>
 
         <section id="auth-section" class="glass-card">
+            <h2 style="text-align: center; font-family: 'Syncopate'; letter-spacing: 4px; margin-bottom: 40px; font-size: 1.2rem;">IDENTITY ACCESS</h2>
             <div class="grid">
                 <div class="auth-box">
-                    <h2 style="margin-bottom:20px; font-family:'Syncopate';">LOGIN</h2>
+                    <h3 style="margin-bottom:20px; font-size: 1rem; opacity: 0.8;">RETURNING AGENT</h3>
                     <input type="text" id="log-user" placeholder="Username">
                     <input type="password" id="log-pass" placeholder="Password">
                     <button class="btn-primary" onclick="login()">ENTER SYSTEM</button>
                 </div>
                 <div class="auth-box">
-                    <h2 style="margin-bottom:20px; font-family:'Syncopate';">REGISTER</h2>
+                    <h3 style="margin-bottom:20px; font-size: 1rem; opacity: 0.8;">NEW IDENTITY</h3>
                     <input type="text" id="reg-user" placeholder="Choose Username">
                     <input type="password" id="reg-pass" placeholder="Choose Password">
                     <button class="btn-primary" onclick="register()">CREATE ACCOUNT</button>
@@ -53,22 +71,12 @@
             </div>
         </section>
 
-        <div class="grid">
-            <div class="feature-item">
-                <h3>CLOUD CORE</h3>
-                <p style="font-size: 0.8rem; opacity: 0.7;">Al je data wordt real-time gesynct met onze Europese Firebase servers.</p>
-                <span class="status-online">● Online</span>
-            </div>
-            <div class="feature-item">
-                <h3>ACTIVE EARNING</h3>
-                <p style="font-size: 0.8rem; opacity: 0.7;">Verdien automatisch coins en XP terwijl je verbonden bent met het platform.</p>
-            </div>
-            <div class="feature-item">
-                <h3>MATTYOU EXCLUSIVES</h3>
-                <p style="font-size: 0.8rem; opacity: 0.7;">Toegang tot unieke shop items die alleen beschikbaar zijn voor onze community.</p>
-            </div>
-        </div>
     </main>
+
+    <footer class="container" style="text-align: center; opacity: 0.4; font-size: 0.7rem; padding-bottom: 50px;">
+        <p>MADE BY <strong>MATTYOU STUDIOS™ X DYLANO</strong></p>
+        <p>V6.0 // CLOUD STABLE // 2026</p>
+    </footer>
 
     <script type="module" src="script.js"></script>
 </body>
