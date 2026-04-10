@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dyloki | Premium Cloud Platform</title>
+    <title>Dyloki | Premium Platform</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Poppins:wght@300;600;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="logo">DYLOKI<span>.</span></div>
+        <div class="logo">DY<span>LOKI</span></div>
         <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html" class="active">Home</a></li>
             <li><a href="games/">Games</a></li>
             <li><a href="shop/">Shop</a></li>
             <li><a href="about/">About</a></li>
@@ -22,78 +22,87 @@
         </div>
     </nav>
 
-    <header class="hero">
+    <div class="hero-premium">
+        <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1 class="glow-text">DYLOKI <span class="highlight">PLATFORM</span></h1>
-            <p>The Ultimate Collaboration: <strong>mattyou studios™ x Dylano</strong></p>
-            <div class="hero-tags">
-                <span>✦ Cloud Powered</span>
-                <span>✦ XP Ranking</span>
-                <span>✦ Premium UI</span>
+            <h1 class="main-title">DYLOKI</h1>
+            <p class="subtitle">POWERED BY MATTYOU STUDIOS™ X DYLANO</p>
+            <div class="badge-row">
+                <span class="badge">V4.0 CLOUD</span>
+                <span class="badge">PREMIUM UI</span>
+                <span class="badge">REAL-TIME</span>
             </div>
         </div>
-    </header>
+    </div>
 
     <main class="container">
         
-        <section id="main-content" style="display:none;" class="status-card">
-            <h2 style="text-align:center;">Welkom terug, <span id="user-welcome" class="highlight">Gamer</span></h2>
-            <div class="grid">
-                <div class="stat-item">
-                    <p>Jouw Status</p>
-                    <h2 id="rank-display">Laden...</h2>
+        <section id="main-content" style="display:none;">
+            <div class="glass-card dashboard">
+                <div class="card-header">
+                    <h2>Welkom, <span id="user-welcome" class="highlight">Gamer</span></h2>
+                    <button onclick="logout()" class="logout-btn">Logout</button>
                 </div>
-                <div class="stat-item">
-                    <p>Verdiende XP</p>
-                    <h2 id="xp-display">0</h2>
+                <div class="grid">
+                    <div class="stat-box">
+                        <p>Huidige Rank</p>
+                        <h3 id="rank-display" class="glow-text">Novice</h3>
+                    </div>
+                    <div class="stat-box">
+                        <p>Totaal XP</p>
+                        <h3 id="xp-display">0</h3>
+                    </div>
+                    <div class="stat-box">
+                        <p>Coins</p>
+                        <h3 id="coin-display" class="coin-glow">0</h3>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <p>Dyloki Coins</p>
-                    <h2 id="coin-display" style="color:#ffd700;">0</h2>
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
                 </div>
             </div>
-            <div class="progress-bar-container"><div id="progress-bar" class="progress-bar"></div></div>
-            <center><button onclick="logout()" class="buy-btn" style="width:auto; margin-top:20px; background:red; color:white;">UITLOGGEN</button></center>
         </section>
 
-        <section class="info-grid">
-            <div class="stat-item">
-                <h3>Verdien XP</h3>
-                <p>Blijf op het platform en zie je rank stijgen. Hoe langer je er bent, hoe legendarischer je wordt.</p>
-            </div>
-            <div class="stat-item">
-                <h3>Coin Systeem</h3>
-                <p>Spaar Dyloki Coins en koop exclusieve upgrades in de shop die mattyou studios™ speciaal voor jou heeft gemaakt.</p>
-            </div>
-            <div class="stat-item">
+        <section class="features">
+            <div class="feature-card">
+                <div class="icon">⚡</div>
                 <h3>Cloud Sync</h3>
-                <p>Dankzij onze Firebase database wordt je progressie overal opgeslagen. Log in op elk apparaat!</p>
+                <p>Al je progressie wordt direct opgeslagen in onze Firebase servers.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🏆</div>
+                <h3>Level Up</h3>
+                <p>Verdien 10 XP per minuut en stijg in de wereldwijde rankings.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">💎</div>
+                <h3>Economy</h3>
+                <p>Verzamel Dyloki Coins en koop unieke items in de shop.</p>
             </div>
         </section>
 
-        <section id="auth-section" class="status-card" style="margin-top: 50px;">
-            <h2 style="text-align:center; margin-bottom:20px;">Join the <span class="highlight">Community</span></h2>
+        <section id="auth-section" class="glass-card">
+            <h2 class="section-title">Word een <span class="highlight">Legende</span></h2>
             <div class="grid">
-                <div class="stat-item">
+                <div class="auth-box">
                     <h3>Inloggen</h3>
                     <input type="text" id="log-user" placeholder="Gebruikersnaam">
                     <input type="password" id="log-pass" placeholder="Wachtwoord">
-                    <button class="buy-btn" onclick="login()">Login</button>
+                    <button class="btn-primary" onclick="login()">Enter Dyloki</button>
                 </div>
-                <div class="stat-item">
+                <div class="auth-box">
                     <h3>Registreren</h3>
-                    <input type="text" id="reg-user" placeholder="Kies Naam">
+                    <input type="text" id="reg-user" placeholder="Kies Gebruikersnaam">
                     <input type="password" id="reg-pass" placeholder="Kies Wachtwoord">
-                    <button class="buy-btn" onclick="register()">Maak Account</button>
+                    <button class="btn-secondary" onclick="register()">Create Account</button>
                 </div>
             </div>
         </section>
-
     </main>
 
-    <footer>
-        <p>Dyloki is made by <strong>mattyou studios™ x Dylano</strong></p>
-        <p style="font-size: 0.7rem; margin-top:10px;">&copy; 2026 Mattyou Studios. Alle rechten voorbehouden.</p>
+    <footer class="footer-premium">
+        <p>Made by <strong>mattyou studios™ x Dylano</strong></p>
+        <p class="copyright">© 2026 DYLOKI CLOUD SYSTEMS</p>
     </footer>
 
     <script type="module" src="script.js"></script>
