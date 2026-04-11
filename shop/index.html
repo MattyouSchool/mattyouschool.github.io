@@ -19,21 +19,71 @@
         <div class="nav-spacer"></div>
     </nav>
 
-    <header class="container" style="text-align: center; padding-top: 60px;">
-        <h1 style="font-family: 'Syncopate'; font-size: 2rem;">UPGRADE_<span>ZONE</span></h1>
+    <header class="container" style="text-align: center; padding-top: 40px;">
+        <h1 style="font-family: 'Syncopate'; font-size: 2rem; letter-spacing: 4px;">UPGRADE_<span>ZONE</span></h1>
+        <p style="color: var(--text-muted); margin-top: 10px;">Geef je XP uit aan exclusieve extra's.</p>
     </header>
 
     <main class="container">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <div id="shop-xp-display" class="btn-sub" style="display: inline-block; padding: 10px 30px; border-color: var(--cyan); color: var(--cyan); font-weight: 800;">
+                JE SALDO: 0 XP
+            </div>
+        </div>
+
         <div class="grid">
-            <div class="shop-card interactive-border">
-                <div style="font-size: 3rem; margin-bottom: 20px;">🎖️</div>
-                <h3>ELITE RANK</h3>
-                <span class="price-tag">5000 XP</span>
-                <button class="btn-main" style="width: 100%;">KOOP NU</button>
+            <div class="mission-card interactive-border" style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 15px;">🏅</div>
+                <h3 style="font-size: 0.8rem; letter-spacing: 2px;">BRONZE BADGE</h3>
+                <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 20px;">Een icoon naast je naam.</p>
+                <button onclick="buyItem('Bronze Badge', 50)" class="btn-main" style="width: 100%;">50 XP</button>
             </div>
+
+            <div class="mission-card interactive-border" style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 15px;">🎨</div>
+                <h3 style="font-size: 0.8rem; letter-spacing: 2px;">CYAN GLOW</h3>
+                <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 20px;">Krijg een glimmende naam.</p>
+                <button onclick="buyItem('Cyan Glow', 150)" class="btn-main" style="width: 100%;">150 XP</button>
             </div>
+
+            <div class="mission-card interactive-border" style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 15px;">🔑</div>
+                <h3 style="font-size: 0.8rem; letter-spacing: 2px;">BETA TESTER</h3>
+                <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 20px;">Toegang tot nieuwe games.</p>
+                <button onclick="buyItem('Beta Access', 300)" class="btn-main" style="width: 100%;">300 XP</button>
+            </div>
+        </div>
     </main>
 
-    <script src="/xp-system.js"></script>
+    <footer class="footer-main" style="text-align: center; padding: 60px 0 40px; opacity: 0.8;">
+        <p style="font-size: 0.9rem; margin-bottom: 5px;">Made by <strong>Mattyou Studios™ x Dylano</strong></p>
+        <p style="font-size: 0.7rem; color: var(--text-muted);">&copy; All rights reserved</p>
+    </footer>
+
+    <script>
+        function updateShopDisplay() {
+            const xp = parseInt(localStorage.getItem('userXP')) || 0;
+            document.getElementById('shop-xp-display').innerText = `JE SALDO: ${xp} XP`;
+        }
+
+        function buyItem(name, price) {
+            let xp = parseInt(localStorage.getItem('userXP')) || 0;
+            if (xp >= price) {
+                xp -= price;
+                localStorage.setItem('userXP', xp);
+                alert(`Gefeliciteerd! Je hebt ${name} gekocht.`);
+                updateShopDisplay();
+                // Ververs de pagina om de XP balken overal bij te werken
+                window.location.reload();
+            } else {
+                alert("Niet genoeg XP! Blijf nog even op de site om meer te verdienen.");
+            }
+        }
+        
+        // Initial check
+        updateShopDisplay();
+        // Update elke 10 seconden voor het geval je XP erbij krijgt terwijl je kijkt
+        setInterval(updateShopDisplay, 10000);
+    </script>
 </body>
 </html>
