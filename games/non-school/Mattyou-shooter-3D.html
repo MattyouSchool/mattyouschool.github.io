@@ -1,0 +1,272 @@
+<meta charset="UTF-8">
+    <title>Mattyou Shooter - X-Ray Edition</title>
+    <style>
+        /* Aangepast naar Fullscreen */
+        #mattyou-game-frame {
+            width: 100vw; 
+            height: 100vh; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #000; 
+            overflow: hidden; 
+        }
+        body { margin: 0; font-family: 'Arial Black', sans-serif; background: #111; color: white; overflow: hidden; }
+        
+        #hud { position: absolute; top: 20px; left: 20px; z-index: 10; pointer-events: none; display: none; }
+        #crosshair { position: absolute; top: 50%; left: 50%; width: 10px; height: 10px; border: 2px solid #fff; border-radius: 50%; transform: translate(-50%, -50%); z-index: 5; display: none; }
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
+        .menu-card { background: #111; padding: 30px; border: 2px solid #444; text-align: center; min-width: 320px; }
+        .hidden { display: none !important; }
+        button { width: 100%; padding: 12px; margin: 8px 0; cursor: pointer; background: #222; border: 1px solid #444; color: white; font-weight: bold; }
+        button:hover { background: #fff; color: #000; }
+        select { width: 100%; padding: 10px; background: #222; color: white; border: 1px solid #444; margin: 10px 0; }
+        #victoryText { color: #f1c40f; font-size: 45px; text-shadow: 0 0 20px gold; display: none; position: absolute; top: 40%; width: 100%; text-align: center; z-index: 200; pointer-events: none; }
+    </style>
+
+<div id="mattyou-game-frame">
+    <div id="hud">
+        <div style="font-size: 24px;">HP: <span id="hpLabel" style="color: #00ff00;">500</span></div>
+        <div style="font-size: 14px;">TARGETS: <span id="botCount">0</span></div>
+    </div>
+    <div id="crosshair"></div>
+    <h1 id="victoryText">VICTORY ROYALE</h1>
+
+    <div id="mainMenu" class="overlay">
+        <div class="menu-card">
+            <h1>MATTYOU SHOOTER 3D EDITION</h1>
+            <button onclick="startGame()">PLAY</button>
+            <button onclick="showMenu('settingsMenu')">SETTINGS</button>
+            <button onclick="showMenu('modsMenu')">MODS</button>
+            <div style="font-size: 12px; color: #888; margin-top: 10px;">Made By Mattyou Studios™</div>
+        </div>
+    </div>
+
+    <div id="settingsMenu" class="overlay hidden">
+        <div class="menu-card">
+            <h1>SETTINGS</h1>
+            <p>Difficulty:</p>
+            <select id="diffSelect">
+                <option value="0.005">EASY</option>
+                <option value="0.015" selected="">NORMAL</option>
+                <option value="0.035">HARD</option>
+            </select>
+            <button onclick="showMenu('mainMenu')">BACK</button>
+        </div>
+    </div>
+
+    <div id="modsMenu" class="overlay hidden">
+        <div class="menu-card">
+            <h1>MODIFICATIONS</h1>
+            <input type="text" id="accessCode" placeholder="ACCESS CODE" style="width:80%; padding:10px; margin-bottom:10px; background:#000; color:white; border:1px solid #333;">
+            <button onclick="unlockExtra()">UNLOCK</button>
+            <div id="extraContent" class="hidden">
+                <button onclick="hacks.autoAim = !hacks.autoAim; this.style.color='red'">AUTO-AIM</button>
+                <button onclick="hacks.ghost = !hacks.ghost; this.style.color='red'">GHOST MODE</button>
+            </div>
+            <button onclick="showMenu('mainMenu')">BACK</button>
+        </div>
+    </div>
+</div>
+
+<script type="importmap"> { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } } </script>
+
+<script type="module">
+import * as THREE from 'three';
+
+let scene, camera, renderer, player, clock;
+let enemies = [], bullets = [], enemyBullets = [], mapObjects = [], buildBlocks = [];
+let gameActive = false, playerHP = 500, botFireRate = 0.015;
+window.hacks = { autoAim: false, ghost: false };
+
+function init() {
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x050505);
+    scene.fog = new THREE.Fog(0x050505, 10, 150);
+
+    const container = document.getElementById('mattyou-game-frame');
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container.appendChild(renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+    const sun = new THREE.DirectionalLight(0xffffff, 0.8); sun.position.set(20, 40, 20); scene.add(sun);
+
+    player = { obj: new THREE.Object3D(), velY: 0, onGround: true, keys: {}, radius: 0.8 };
+    scene.add(player.obj);
+    player.obj.add(camera);
+    player.obj.position.set(0, 2, 80);
+
+    clock = new THREE.Clock();
+
+    // Automatische resize-functie
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if(["Space", "ArrowUp", "ArrowDown"].includes(e.code) && gameActive) e.preventDefault();
+        player.keys[e.key.toLowerCase()] = true;
+    });
+    window.onkeyup = (e) => player.keys[e.key.toLowerCase()] = false;
+
+    container.addEventListener('mousedown', (e) => {
+        if(gameActive) {
+            renderer.domElement.requestPointerLock();
+            if(e.button === 0) fireBullet();
+            if(e.button === 2) placeBlock();
+        }
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (document.pointerLockElement === renderer.domElement && gameActive) {
+            player.obj.rotation.y -= e.movementX * 0.002;
+            camera.rotation.x -= e.movementY * 0.002;
+            camera.rotation.x = Math.max(-1.5, Math.min(1.5, camera.rotation.x));
+        }
+    });
+
+    generateArena();
+    animate();
+}
+
+function generateArena() {
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshLambertMaterial({color: 0x080808}));
+    ground.rotation.x = -Math.PI/2; ground.name = "ground"; scene.add(ground);
+    const mat = new THREE.MeshLambertMaterial({color: 0x222222});
+    for(let i=0; i<150; i++) {
+        const h = Math.random() * 8 + 2;
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(Math.random()*8+2, h, Math.random()*8+2), mat);
+        mesh.position.set(Math.random()*300-150, h/2, Math.random()*300-150);
+        if(mesh.position.distanceTo(player.obj.position) > 15) { scene.add(mesh); mapObjects.push(mesh); }
+    }
+}
+
+function checkCollision(pos, radius) {
+    const pBox = new THREE.Box3().setFromCenterAndSize(pos, new THREE.Vector3(radius*2, 2, radius*2));
+    for(let obj of [...mapObjects, ...buildBlocks]) {
+        if(pBox.intersectsBox(new THREE.Box3().setFromObject(obj))) return true;
+    }
+    return false;
+}
+
+function fireBullet() {
+    const b = new THREE.Mesh(new THREE.SphereGeometry(0.15), new THREE.MeshBasicMaterial({color: 0x00ffff}));
+    const dir = new THREE.Vector3(); camera.getWorldDirection(dir);
+    b.position.copy(player.obj.position);
+    b.userData = { vel: dir.multiplyScalar(2.5), life: 100 };
+    scene.add(b); bullets.push(b);
+}
+
+function enemyFire(bot) {
+    const dist = bot.position.distanceTo(player.obj.position);
+    if(dist > 165) return;
+    const ray = new THREE.Raycaster();
+    const direction = new THREE.Vector3().subVectors(player.obj.position, bot.position).normalize();
+    ray.set(bot.position, direction);
+    const intersects = ray.intersectObjects([...mapObjects, ...buildBlocks, scene.getObjectByName('ground')]);
+    if(intersects.length > 0 && intersects[0].distance < dist - 1) return;
+
+    const b = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({color: 0xff0000}));
+    b.position.copy(bot.position);
+    b.userData = { vel: direction.multiplyScalar(1.2), life: 120 };
+    scene.add(b); enemyBullets.push(b);
+}
+
+function placeBlock() {
+    const ray = new THREE.Raycaster();
+    ray.setFromCamera(new THREE.Vector2(0,0), camera);
+    const hits = ray.intersectObjects([scene.getObjectByName('ground'), ...mapObjects, ...buildBlocks]);
+    if(hits.length > 0) {
+        const p = hits[0].point.add(hits[0].face.normal.multiplyScalar(0.75));
+        const gridP = new THREE.Vector3(Math.round(p.x), Math.round(p.y), Math.round(p.z));
+        const b = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.5, 1.5), new THREE.MeshLambertMaterial({color: 0x444444}));
+        b.position.copy(gridP); scene.add(b); buildBlocks.push(b);
+    }
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    const delta = clock.getDelta();
+    if(!gameActive) { renderer?.render(scene, camera); return; }
+
+    const oldPos = player.obj.position.clone();
+    let speed = 14 * delta;
+    if(player.keys['w']) player.obj.translateZ(-speed);
+    if(player.keys['s']) player.obj.translateZ(speed);
+    if(player.keys['a']) player.obj.translateX(-speed);
+    if(player.keys['d']) player.obj.translateX(speed);
+    
+    if(checkCollision(player.obj.position, player.radius)) {
+        player.obj.position.copy(oldPos);
+    }
+
+    player.velY -= 22 * delta;
+    player.obj.position.y += player.velY * delta;
+    if(player.obj.position.y < 1.6) { player.obj.position.y = 1.6; player.velY = 0; player.onGround = true; }
+    if(player.keys[' '] && player.onGround) { player.velY = 8.5; player.onGround = false; }
+
+    bullets.forEach((b, i) => {
+        b.position.add(b.userData.vel);
+        enemies.forEach((bot, bi) => {
+            if(b.position.distanceTo(bot.position) < 1.6) {
+                bot.userData.hp -= 35; scene.remove(b); bullets.splice(i,1);
+                if(bot.userData.hp <= 0) { scene.remove(bot); enemies.splice(bi, 1); document.getElementById('botCount').innerText = enemies.length; if(enemies.length === 0) win(); }
+            }
+        });
+        if(b.userData.life-- <= 0) { scene.remove(b); bullets.splice(i,1); }
+    });
+
+    enemyBullets.forEach((eb, i) => {
+        eb.position.add(eb.userData.vel);
+        if(eb.position.distanceTo(player.obj.position) < 1.2 && !window.hacks.ghost) {
+            playerHP -= 10; document.getElementById('hpLabel').innerText = Math.max(0, playerHP);
+            scene.remove(eb); enemyBullets.splice(i,1);
+            if(playerHP <= 0) location.reload();
+        }
+    });
+
+    enemies.forEach(bot => {
+        const oldBotPos = bot.position.clone();
+        bot.lookAt(player.obj.position.x, bot.position.y, player.obj.position.z);
+        bot.translateZ(4 * delta);
+        if(checkCollision(bot.position, 1.0)) {
+            bot.position.copy(oldBotPos);
+            bot.translateX(5 * delta * (Math.random() > 0.5 ? 1 : -1));
+        }
+        if(Math.random() < botFireRate) enemyFire(bot);
+    });
+
+    renderer.render(scene, camera);
+}
+
+window.startGame = () => {
+    botFireRate = parseFloat(document.getElementById('diffSelect').value);
+    document.getElementById('mainMenu').classList.add('hidden');
+    document.getElementById('hud').style.display = 'block';
+    document.getElementById('crosshair').style.display = 'block';
+    if(!scene) init();
+    for(let i=0; i<12; i++) {
+        const bot = new THREE.Mesh(
+            new THREE.BoxGeometry(1.5, 2, 1.5), 
+            new THREE.MeshBasicMaterial({color: 0xff0000, transparent: true, opacity: 0.8, depthTest: false})
+        );
+        bot.renderOrder = 999; 
+        bot.position.set(Math.random()*260-130, 1, Math.random()*260-130);
+        bot.userData = { hp: 100 };
+        scene.add(bot); enemies.push(bot);
+    }
+    document.getElementById('botCount').innerText = enemies.length;
+    gameActive = true;
+};
+
+window.showMenu = (id) => { document.querySelectorAll('.overlay').forEach(e=>e.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); };
+window.unlockExtra = () => { if(document.getElementById('accessCode').value === '7123') document.getElementById('extraContent').classList.remove('hidden'); };
+function win() { gameActive = false; document.getElementById('victoryText').style.display = 'block'; setTimeout(() => location.reload(), 3000); }
+
+init(); // Start direct met init
+</script>
