@@ -7,21 +7,63 @@
 <body style="text-align: center; background: #000; color: white;">
     <h1 style="font-family: 'Syncopate'; padding-top: 30px;">GALAXY DEFENSE</h1>
     <canvas id="game" width="400" height="500" style="border: 2px solid var(--cyan); margin: 20px auto; display: block;"></canvas>
-    <a href="/games/" style="color: var(--cyan); text-decoration: none;">← Terug naar Games</a>
+    <a href="/games/" style="color: var(--cyan); text-decoration: none;">← TERUG</a>
+
     <script>
         const canvas = document.getElementById('game');
         const ctx = canvas.getContext('2d');
         let ship = { x: 180, y: 460, w: 40, h: 20 };
+        let bullets = [];
+        let enemies = [];
+
+        function initEnemies() {
+            for(let i=0; i<6; i++) {
+                for(let j=0; j<4; j++) {
+                    enemies.push({x: 40+i*60, y: 40+j*40, w: 30, h: 20, alive: true});
+                }
+            }
+        }
+
         function draw() {
-            ctx.clearRect(0,0,400,500);
+            ctx.clearRect(0, 0, 400, 500);
             ctx.fillStyle = "#00e5ff";
             ctx.fillRect(ship.x, ship.y, ship.w, ship.h);
+
+            bullets.forEach((b, index) => {
+                b.y -= 7;
+                ctx.fillStyle = "yellow";
+                ctx.fillRect(b.x, b.y, 4, 10);
+                
+                enemies.forEach(e => {
+                    if(e.alive && b.x > e.x && b.x < e.x + e.w && b.y < e.y + e.h && b.y > e.y) {
+                        e.alive = false;
+                        bullets.splice(index, 1);
+                    }
+                });
+            });
+
+            enemies.forEach(e => {
+                if(e.alive) {
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(e.x, e.y, e.w, e.h);
+                }
+            });
+
+            if(enemies.every(e => !e.alive)) {
+                ctx.fillStyle = "white";
+                ctx.fillText("MISSION CLEAR", 150, 250);
+            }
+
             requestAnimationFrame(draw);
         }
+
         window.addEventListener('keydown', e => {
             if(e.key === "ArrowLeft" && ship.x > 0) ship.x -= 20;
             if(e.key === "ArrowRight" && ship.x < 360) ship.x += 20;
+            if(e.key === " ") bullets.push({x: ship.x + 18, y: ship.y});
         });
+
+        initEnemies();
         draw();
     </script>
 </body>
