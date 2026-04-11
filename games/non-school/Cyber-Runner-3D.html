@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER RUNNER 3D - FULL VERSION</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; font-family: 'Segoe UI', sans-serif; user-select: none; color: white; }
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); display: flex; justify-content: center; align-items: center; z-index: 100; }
+        .panel { background: #0a0a0a; border: 3px solid #0ff; padding: 25px; text-align: center; box-shadow: 0 0 40px #0ff; min-width: 400px; border-radius: 20px; max-height: 90vh; overflow-y: auto; }
+        h1, h2 { color: #0ff; text-shadow: 0 0 15px #0ff; margin: 10px 0; text-transform: uppercase; }
+        .btn { background: #0ff; border: none; padding: 12px; cursor: pointer; font-weight: bold; margin: 8px; width: 100%; max-width: 280px; transition: 0.3s; font-size: 14px; border-radius: 5px; text-transform: uppercase; color: black; }
+        .btn:hover { background: #fff; box-shadow: 0 0 20px #fff; transform: scale(1.05); }
+        .btn-mod { background: #ff00ff; color: white; }
+        .btn-back-game { position: absolute; top: 75px; right: 20px; width: auto; padding: 10px 20px; z-index: 999; background: rgba(255, 255, 255, 0.2); color: white; border: 2px solid #fff; border-radius: 5px; cursor: pointer; pointer-events: auto; }
+        #game-ui { position: absolute; top: 20px; left: 20px; z-index: 50; display: none; pointer-events: none; width: 100%; height: 100%; }
+        .stat { font-size: 20px; font-weight: bold; text-shadow: 0 0 10px #0ff; margin-bottom: 5px; pointer-events: none; }
+        #boost-container { width: 200px; height: 12px; background: #222; border: 1px solid #0ff; margin-top: 10px; border-radius: 6px; overflow: hidden; pointer-events: none; }
+        #boost-bar { width: 100%; height: 100%; background: #0ff; transition: width 0.05s; }
+        .setting-group { text-align: left; margin-bottom: 12px; padding: 12px; border-bottom: 1px solid #222; }
+        input[type="range"], input[type="text"], select { width: 95%; background: #111; color: #0ff; border: 1px solid #0ff; padding: 8px; margin-top: 5px; border-radius: 5px; font-size: 14px; }
+        .mod-item { background: #111; padding: 12px; border-radius: 8px; margin: 8px 0; border: 1px solid #ff00ff; display: flex; justify-content: space-between; align-items: center; }
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+        .shop-item { border: 2px solid #333; padding: 10px; cursor: pointer; border-radius: 8px; font-size: 11px; background: #050505; transition: 0.2s; }
+        .shop-item.selected { border-color: #0ff; background: rgba(0, 255, 255, 0.1); }
+        .color-preview { width: 100%; height: 15px; border-radius: 3px; margin-bottom: 5px; }
+        #crt-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05)); z-index: 200; background-size: 100% 3px, 3px 100%; pointer-events: none; display: none; }
+    </style>
+</head>
+<body>
+
+<div id="crt-overlay"></div>
+
+<div id="game-container">
+    <div id="menu-main" class="overlay">
+        <div class="panel">
+            <h1>CYBER RUNNER</h1>
+            <button class="btn" onclick="window.ui.start()">START MISSION</button>
+            <button class="btn btn-mod" onclick="window.ui.show('menu-mods')">MODS</button>
+            <button class="btn" id="daily-btn" onclick="window.ui.claimDaily()">CLAIM DAILY (+50 🪙)</button>
+            <button class="btn" onclick="window.ui.show('menu-shop')">SHOP</button>
+            <button class="btn" onclick="window.ui.show('menu-settings')">SETTINGS</button>
+            <p style="color: #444; font-size: 11px; margin-top:10px;">@mattyou | Best: <span id="best-val">0</span></p>
+        </div>
+    </div>
+
+    <div id="menu-mods" class="overlay" style="display:none">
+        <div class="panel">
+            <h2 style="color:#ff00ff">MOD MENU</h2>
+            <div class="mod-item"><span>LOW GRAVITY</span><input type="checkbox" id="mod-gravity" onchange="window.ui.saveMods()"></div>
+            <div class="mod-item"><span>CRT SHADERS</span><input type="checkbox" id="mod-shaders" onchange="window.ui.saveMods()"></div>
+            <div class="mod-item"><span>RAINBOW SHIP</span><input type="checkbox" id="mod-rainbow" onchange="window.ui.saveMods()"></div>
+            <div class="mod-item"><span>SLOW-MOTION</span><input type="checkbox" id="mod-slowmo" onchange="window.ui.saveMods()"></div>
+            
+            <div id="hacks-section" style="display:none">
+                <h2 style="color:#ff0000">HACKS ENABLED</h2>
+                <div class="mod-item" style="border-color:#ff0000"><span>GHOST MODE</span><input type="checkbox" id="mod-ghost" onchange="window.ui.saveMods()"></div>
+                <div class="mod-item" style="border-color:#ff0000"><span>AUTO-PILOT</span><input type="checkbox" id="mod-autopilot" onchange="window.ui.saveMods()"></div>
+                <div class="mod-item" style="border-color:#ff0000; flex-direction:column; align-items:flex-start;">
+                    <span>COIN MULTIPLIER: <b id="hack-coin-mult-val">1</b>x</span>
+                    <input type="range" id="hack-coin-mult-slider" min="1" max="100" value="1" oninput="window.ui.saveMods()">
+                </div>
+                <div class="mod-item" style="border-color:#ff0000; flex-direction:column; align-items:flex-start;">
+                    <span>COIN RAIN: <b id="hack-rain-val">Low</b></span>
+                    <input type="range" id="hack-rain-slider" min="1" max="10" value="1" oninput="window.ui.saveMods()">
+                </div>
+                <div class="mod-item" style="border-color:#ff0000"><span>HIGHFLIGHT</span><input type="checkbox" id="mod-highflight" onchange="window.ui.saveMods()"></div>
+                <div class="mod-item" style="border-color:#ff0000"><span>INFINITE BOOST</span><input type="checkbox" id="mod-boost" onchange="window.ui.saveMods()"></div>
+            </div>
+
+            <div id="code-panel" style="margin-top:15px;">
+                <input type="text" id="mod-code-input" placeholder="Enter Secret Code...">
+                <button class="btn btn-mod" style="width:50%" onclick="window.ui.checkCode()">UNLOCK EXTRA</button>
+            </div>
+            <button class="btn" onclick="window.ui.show('menu-main')">BACK TO MENU</button>
+        </div>
+    </div>
+
+    <div id="menu-settings" class="overlay" style="display:none">
+        <div class="panel">
+            <h2>SETTINGS</h2>
+            <div class="setting-group">
+                <p>SCORE MULTIPLIER: <span id="mult-label">1.0</span>x</p>
+                <input type="range" id="mult-slider" min="1.0" max="8.0" step="0.1" oninput="window.ui.saveSettings()">
+            </div>
+            <div class="setting-group">
+                <p>SENSITIVITY: <span id="sens-label">0.15</span></p>
+                <input type="range" id="sens-slider" min="0.02" max="0.6" step="0.01" oninput="window.ui.saveSettings()">
+            </div>
+            <div class="setting-group">
+                <p>CONTROLS:</p>
+                <label><input type="radio" name="ctrl" value="keyboard"> KEYBOARD</label><br>
+                <label><input type="radio" name="ctrl" value="mouse"> MOUSE</label>
+            </div>
+            <div class="setting-group">
+                <p>DIFFICULTY:</p>
+                <select id="diff-select" onchange="window.ui.saveSettings()">
+                    <option value="easy">EASY</option>
+                    <option value="normal">NORMAL</option>
+                    <option value="hard">HARD</option>
+                    <option value="insane">INSANE</option>
+                </select>
+            </div>
+            <button class="btn" onclick="window.ui.show('menu-main')">BACK</button>
+        </div>
+    </div>
+
+    <div id="menu-shop" class="overlay" style="display:none">
+        <div class="panel">
+            <h2>SHIP SHOP</h2>
+            <p id="shop-coins" style="color:#ffeb3b">COINS: 0</p>
+            <div class="shop-grid" id="shop-container"></div>
+            <button class="btn" onclick="window.ui.show('menu-main')">BACK</button>
+        </div>
+    </div>
+
+    <div id="game-ui">
+        <div class="stat">SCORE: <span id="score-val">0</span></div>
+        <div class="stat" style="color:#ffeb3b">COINS: <span id="coin-val-hud">0</span></div>
+        <div id="boost-container"><div id="boost-bar"></div></div>
+    </div>
+    <button class="btn-back-game" id="btn-quit" style="display:none" onclick="window.ui.quitToMenu()">BACK TO MENU</button>
+
+    <div id="menu-death" class="overlay" style="display:none">
+        <div class="panel">
+            <h1 style="color:#ff0055">CRASHED!</h1>
+            <p class="stat">SCORE: <span id="final-score">0</span></p>
+            <button class="btn" onclick="window.ui.start()">TRY AGAIN</button>
+            <button class="btn" onclick="window.ui.show('menu-main')">MAIN MENU</button>
+        </div>
+    </div>
+</div>
+
+<script type="importmap">
+    { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+
+    const shopItems = [
+        { name: 'NEON', color: '#00ffcc', price: 0, maxMult: 1.0, type: 'basic' },
+        { name: 'RED', color: '#ff0055', price: 100, maxMult: 2.0, type: 'basic' },
+        { name: 'GOLD', color: '#ffeb3b', price: 250, maxMult: 3.5, type: 'basic' },
+        { name: 'CHROME', color: '#ffffff', price: 400, maxMult: 4.5, type: 'metal' },
+        { name: 'EMERALD', color: '#00ff44', price: 600, maxMult: 5.5, type: 'pulse' },
+        { name: 'MAGMA', color: '#ff4400', price: 800, maxMult: 6.5, type: 'lava' },
+        { name: 'VOID', color: '#8800ff', price: 1200, maxMult: 8.0, type: 'cosmic' }
+    ];
+
+    const diffSettings = {
+        easy: { speed: 0.15, spawnRate: 60, accel: 0.00005 },
+        normal: { speed: 0.25, spawnRate: 45, accel: 0.0001 },
+        hard: { speed: 0.4, spawnRate: 35, accel: 0.0002 },
+        insane: { speed: 0.6, spawnRate: 20, accel: 0.0004 }
+    };
+
+    let state = {
+        alive: false, score: 0, animId: null,
+        coins: parseInt(localStorage.getItem('cr_coins')) || 0,
+        highScore: parseInt(localStorage.getItem('cr_highscore')) || 0,
+        unlocked: JSON.parse(localStorage.getItem('cr_unlocked')) || ['#00ffcc'],
+        color: localStorage.getItem('cr_color') || '#00ffcc',
+        control: localStorage.getItem('cr_control') || 'keyboard',
+        difficulty: localStorage.getItem('cr_difficulty') || 'normal',
+        sensitivity: parseFloat(localStorage.getItem('cr_sensitivity')) || 0.15,
+        multiplier: parseFloat(localStorage.getItem('cr_multiplier')) || 1.0,
+        lastDaily: localStorage.getItem('cr_daily') || 0,
+        modGravity: false, modHighFlight: false, modShaders: false, modBoost: false, 
+        modRainbow: false, modSlowMo: false, modGhost: false, modAutopilot: false,
+        hackCoinMult: 1, hackCoinRate: 1, hacksUnlocked: false,
+        isBoosting: false, boostLevel: 100
+    };
+
+    let scene, camera, renderer, player, road, obstacles = [], coins = [], speed = 0.25, baseSpeed = 0.25, frame = 0;
+    let mouseX = 0, lastX = 0, keys = {};
+
+    window.ui = {
+        show: (id) => {
+            document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none');
+            document.getElementById(id).style.display = 'flex';
+            if(id === 'menu-shop') window.ui.loadShop();
+            if(id === 'menu-settings') window.ui.loadSettingsUI();
+        },
+        start: () => {
+            window.focus();
+            window.ui.saveSettings();
+            obstacles.forEach(o => scene.remove(o)); coins.forEach(c => scene.remove(c));
+            obstacles = []; coins = []; 
+            state.score = 0; frame = 0; baseSpeed = diffSettings[state.difficulty].speed;
+            state.boostLevel = 100; state.isBoosting = false;
+            player.position.x = 0;
+            document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none');
+            document.getElementById('game-ui').style.display = 'block';
+            document.getElementById('btn-quit').style.display = 'block';
+            state.alive = true;
+            if(state.animId) cancelAnimationFrame(state.animId);
+            animate();
+        },
+        checkCode: () => {
+            if(document.getElementById('mod-code-input').value === "7123") {
+                state.hacksUnlocked = true;
+                document.getElementById('hacks-section').style.display = 'block';
+                document.getElementById('code-panel').style.display = 'none';
+            }
+        },
+        saveMods: () => {
+            state.modGravity = document.getElementById('mod-gravity').checked;
+            state.modHighFlight = document.getElementById('mod-highflight').checked;
+            state.modShaders = document.getElementById('mod-shaders').checked;
+            state.modBoost = document.getElementById('mod-boost').checked;
+            state.modRainbow = document.getElementById('mod-rainbow').checked;
+            state.modSlowMo = document.getElementById('mod-slowmo').checked;
+            state.modGhost = document.getElementById('mod-ghost').checked;
+            state.modAutopilot = document.getElementById('mod-autopilot').checked;
+            state.hackCoinMult = parseFloat(document.getElementById('hack-coin-mult-slider').value);
+            state.hackCoinRate = parseFloat(document.getElementById('hack-rain-slider').value);
+            document.getElementById('crt-overlay').style.display = state.modShaders ? 'block' : 'none';
+            document.getElementById('hack-coin-mult-val').innerText = state.hackCoinMult;
+            document.getElementById('hack-rain-val').innerText = state.hackCoinRate;
+            createPlayer();
+        },
+        loadSettingsUI: () => {
+            const skin = shopItems.find(i => i.color === state.color);
+            document.getElementById('mult-slider').max = skin.maxMult;
+            document.getElementById('mult-slider').value = state.multiplier;
+            document.getElementById('mult-label').innerText = state.multiplier.toFixed(1);
+            document.getElementById('sens-slider').value = state.sensitivity;
+            document.getElementById('sens-label').innerText = state.sensitivity;
+            document.getElementById('diff-select').value = state.difficulty;
+            const ctrlInput = document.querySelector(`input[name="ctrl"][value="${state.control}"]`);
+            if(ctrlInput) ctrlInput.checked = true;
+        },
+        saveSettings: () => {
+            const ctrl = document.querySelector('input[name="ctrl"]:checked');
+            if(ctrl) state.control = ctrl.value;
+            state.difficulty = document.getElementById('diff-select').value;
+            state.multiplier = parseFloat(document.getElementById('mult-slider').value);
+            state.sensitivity = parseFloat(document.getElementById('sens-slider').value);
+            localStorage.setItem('cr_sensitivity', state.sensitivity);
+            localStorage.setItem('cr_multiplier', state.multiplier);
+            localStorage.setItem('cr_control', state.control);
+            localStorage.setItem('cr_difficulty', state.difficulty);
+            document.getElementById('sens-label').innerText = state.sensitivity;
+            document.getElementById('mult-label').innerText = state.multiplier.toFixed(1);
+        },
+        quitToMenu: () => {
+            state.alive = false; cancelAnimationFrame(state.animId);
+            document.getElementById('btn-quit').style.display = 'none';
+            document.getElementById('game-ui').style.display = 'none';
+            window.ui.show('menu-main');
+        },
+        claimDaily: () => {
+            if (Date.now() - state.lastDaily < 86400000) return alert("Morgen weer!");
+            state.coins += 50; state.lastDaily = Date.now();
+            localStorage.setItem('cr_coins', state.coins); localStorage.setItem('cr_daily', state.lastDaily);
+            window.ui.checkDaily();
+        },
+        checkDaily: () => {
+            if (Date.now() - state.lastDaily < 86400000) document.getElementById('daily-btn').innerText = "GECLAIMD";
+        },
+        loadShop: () => {
+            const container = document.getElementById('shop-container'); container.innerHTML = '';
+            shopItems.forEach(item => {
+                const owned = state.unlocked.includes(item.color);
+                const div = document.createElement('div');
+                div.className = `shop-item ${state.color === item.color ? 'selected' : ''}`;
+                div.innerHTML = `<div class="color-preview" style="background:${item.type==='cosmic'?'linear-gradient(45deg,#000,#440088,#000)':item.color}"></div>${item.name}<br>Mult: ${item.maxMult}x<br><b>${owned ? 'SELECT' : item.price + ' 🪙'}</b>`;
+                div.onclick = () => {
+                    if(owned) { state.color = item.color; localStorage.setItem('cr_color', item.color); createPlayer(); window.ui.loadShop(); }
+                    else if(state.coins >= item.price) { state.coins -= item.price; state.unlocked.push(item.color); localStorage.setItem('cr_coins', state.coins); localStorage.setItem('cr_unlocked', JSON.stringify(state.unlocked)); window.ui.loadShop(); }
+                };
+                container.appendChild(div);
+            });
+            document.getElementById('shop-coins').innerText = "COINS: " + state.coins;
+        }
+    };
+
+    function init() {
+        scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(0x000000, 15, 80);
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 3, 7);
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        scene.add(new THREE.PointLight(0x00ffff, 15, 100), new THREE.AmbientLight(0x333333));
+        road = new THREE.GridHelper(200, 40, 0x00ffff, 0x111111);
+        scene.add(road);
+        createPlayer();
+        window.ui.checkDaily();
+        document.getElementById('best-val').innerText = state.highScore;
+        window.addEventListener('mousedown', () => window.focus());
+    }
+
+    function createPlayer() {
+        if(player) scene.remove(player);
+        const skin = shopItems.find(s => s.color === state.color);
+        const group = new THREE.Group();
+        const mat = new THREE.MeshStandardMaterial({ 
+            color: state.color, 
+            emissive: state.color, 
+            emissiveIntensity: 0.6, 
+            metalness: skin.type==='metal'?1:0.5,
+            roughness: skin.type==='metal'?0.1:0.5,
+            transparent: true, 
+            opacity: state.modGhost ? 0.5 : 1.0 
+        });
+        group.add(new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.3, 1.2), mat));
+        group.add(new THREE.Mesh(new THREE.BoxGeometry(2, 0.1, 0.6), mat));
+        player = group;
+        player.position.y = state.modHighFlight ? 8 : (state.modGravity ? 1.6 : 0.5);
+        scene.add(player);
+    }
+
+    function animate() {
+        if(!state.alive) return;
+        state.animId = requestAnimationFrame(animate);
+        frame++;
+        let d = diffSettings[state.difficulty];
+        let ts = state.modSlowMo ? 0.4 : 1.0;
+
+        if(keys[' '] && state.boostLevel > 0) { state.isBoosting = true; if(!state.modBoost) state.boostLevel -= 0.8; }
+        else { state.isBoosting = false; if(state.boostLevel < 100) state.boostLevel += 0.2; }
+        if(state.modBoost) state.boostLevel = 100;
+        document.getElementById('boost-bar').style.width = state.boostLevel + "%";
+
+        speed = (state.isBoosting ? baseSpeed * 3.2 : baseSpeed) * ts;
+        camera.fov = THREE.MathUtils.lerp(camera.fov, state.isBoosting ? 95 : 75, 0.1);
+        camera.updateProjectionMatrix();
+
+        const skin = shopItems.find(s => s.color === state.color);
+        player.children.forEach(m => {
+            if(state.modRainbow) { m.material.color.setHSL((frame%360)/360, 1, 0.5); m.material.emissive.setHSL((frame%360)/360, 1, 0.5); }
+            else if(skin.type === 'cosmic') {
+                let hue = (Math.sin(frame * 0.01) * 0.1) + 0.75;
+                m.material.color.setHSL(hue, 1, 0.1);
+                m.material.emissive.setHSL(hue, 0.8, 0.4 * Math.abs(Math.sin(frame*0.02)));
+            }
+            else if(skin.type === 'pulse') { m.material.emissiveIntensity = 0.5 + Math.sin(frame*0.1)*0.5; }
+            else if(skin.type === 'lava') { m.material.emissive.setHSL(0.05, 1, 0.3 + Math.sin(frame*0.05)*0.2); }
+        });
+
+        if(frame % Math.floor(d.spawnRate / ts) === 0) {
+            const h = 1 + Math.random() * 5;
+            const obs = new THREE.Mesh(new THREE.BoxGeometry(2.5, h, 1.5), new THREE.MeshStandardMaterial({ color: 0xff0055, emissive: 0xff0055 }));
+            obs.position.set((Math.random()-0.5)*10, h/2, -70);
+            scene.add(obs); obstacles.push(obs);
+        }
+
+        if(frame % Math.floor((90 / state.hackCoinRate) / ts) === 0) {
+            const c = new THREE.Mesh(new THREE.SphereGeometry(0.4, 16, 16), new THREE.MeshStandardMaterial({ color: 0xffeb3b, emissive: 0xffeb3b }));
+            c.position.set((Math.random()-0.5)*9, 0.8, -70);
+            scene.add(c); coins.push(c);
+        }
+
+        road.position.z += speed;
+        if(road.position.z > 5) road.position.z = 0;
+
+        if(state.modAutopilot) {
+            obstacles.forEach(o => { if(o.position.z < -5 && o.position.z > -20 && Math.abs(player.position.x - o.position.x) < 2.5) player.position.x += (player.position.x > o.position.x ? 0.1 : -0.1); });
+        }
+
+        if(state.control === 'mouse') player.position.x = THREE.MathUtils.lerp(player.position.x, mouseX * 5, state.sensitivity);
+        else {
+            if(keys['a'] || keys['ArrowLeft']) player.position.x -= (state.sensitivity * 1.5);
+            if(keys['d'] || keys['ArrowRight']) player.position.x += (state.sensitivity * 1.5);
+        }
+        player.position.x = Math.max(-5, Math.min(5, player.position.x));
+        player.rotation.z = -((player.position.x - lastX) * 0.7);
+        lastX = player.position.x;
+
+        for(let i = obstacles.length-1; i >= 0; i--) {
+            obstacles[i].position.z += speed;
+            if(!state.modHighFlight && !state.modGhost && Math.abs(player.position.x - obstacles[i].position.x) < 1.7 && Math.abs(player.position.z - obstacles[i].position.z) < 1.3) { gameOver(); return; }
+            if(obstacles[i].position.z > 10) { scene.remove(obstacles[i]); obstacles.splice(i, 1); }
+        }
+
+        for(let i = coins.length-1; i >= 0; i--) {
+            coins[i].position.z += speed;
+            if (Math.abs(player.position.x - coins[i].position.x) < 1.2 && Math.abs(player.position.z - coins[i].position.z) < 1.2) {
+                state.coins += Math.round(state.hacksUnlocked ? state.hackCoinMult : 1);
+                state.score += (100 * state.multiplier);
+                document.getElementById('coin-val-hud').innerText = state.coins;
+                scene.remove(coins[i]); coins.splice(i, 1);
+            } else if(coins[i].position.z > 10) { scene.remove(coins[i]); coins.splice(i, 1); }
+        }
+
+        state.score += (state.multiplier * ts);
+        document.getElementById('score-val').innerText = Math.floor(state.score);
+        baseSpeed += d.accel;
+        renderer.render(scene, camera);
+    }
+
+    function gameOver() {
+        state.alive = false; cancelAnimationFrame(state.animId);
+        localStorage.setItem('cr_coins', state.coins);
+        if(state.score > state.highScore) { state.highScore = Math.floor(state.score); localStorage.setItem('cr_highscore', state.highScore); }
+        document.getElementById('btn-quit').style.display = 'none';
+        window.ui.show('menu-death');
+        document.getElementById('final-score').innerText = Math.floor(state.score);
+    }
+
+    window.onkeydown = (e) => keys[e.key] = true;
+    window.onkeyup = (e) => keys[e.key] = false;
+    window.onmousemove = (e) => mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+    
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
