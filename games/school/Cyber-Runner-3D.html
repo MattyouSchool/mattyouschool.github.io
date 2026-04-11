@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CYBER RUNNER 3D - FULL VERSION</title>
+    <title>CYBER RUNNER 3D - SCHOOL EDITION</title>
     <style>
         body { margin: 0; overflow: hidden; background: #000; font-family: 'Segoe UI', sans-serif; user-select: none; color: white; }
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); display: flex; justify-content: center; align-items: center; z-index: 100; }
@@ -25,13 +25,29 @@
         .shop-item.selected { border-color: #0ff; background: rgba(0, 255, 255, 0.1); }
         .color-preview { width: 100%; height: 15px; border-radius: 3px; margin-bottom: 5px; }
         #crt-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05)); z-index: 200; background-size: 100% 3px, 3px 100%; pointer-events: none; display: none; }
+        
+        /* School Edition Styles */
+        #school-overlay { z-index: 2000; background: #f0f0f0; color: #000; }
+        #school-panel { background: #fff; border: 2px solid #333; color: #000; box-shadow: 10px 10px 0px #888; text-align: left; min-width: 300px; padding: 30px; }
+        #school-status { position: fixed; bottom: 10px; right: 10px; font-size: 10px; color: #444; opacity: 0.5; }
     </style>
 </head>
 <body>
 
 <div id="crt-overlay"></div>
+<div id="school-status">School Mode: ON (H to toggle, V for quick math)</div>
 
 <div id="game-container">
+    <div id="school-overlay" class="overlay" style="display:none">
+        <div id="school-panel">
+            <h2 style="color:#000; text-shadow:none; border-bottom: 2px solid #000;">WISKUNDE OPGAVE</h2>
+            <p style="font-size: 18px; margin: 20px 0;">Bereken de volgende som om verder te gaan:</p>
+            <h1 id="math-question" style="color:#000; text-shadow:none; font-size: 48px;">12 x 10</h1>
+            <input type="text" id="math-answer" placeholder="Antwoord..." style="background:#fff; color:#000; border: 2px solid #000; width: 100%; font-size: 24px;">
+            <p style="font-size: 12px; margin-top: 10px; color: #666;">Druk op ENTER om te bevestigen.</p>
+        </div>
+    </div>
+
     <div id="menu-main" class="overlay">
         <div class="panel">
             <h1>CYBER RUNNER</h1>
@@ -156,7 +172,7 @@
     };
 
     let state = {
-        alive: false, score: 0, animId: null,
+        alive: false, score: 0, animId: null, isPaused: false,
         coins: parseInt(localStorage.getItem('cr_coins')) || 0,
         highScore: parseInt(localStorage.getItem('cr_highscore')) || 0,
         unlocked: JSON.parse(localStorage.getItem('cr_unlocked')) || ['#00ffcc'],
@@ -169,7 +185,8 @@
         modGravity: false, modHighFlight: false, modShaders: false, modBoost: false, 
         modRainbow: false, modSlowMo: false, modGhost: false, modAutopilot: false,
         hackCoinMult: 1, hackCoinRate: 1, hacksUnlocked: false,
-        isBoosting: false, boostLevel: 100
+        isBoosting: false, boostLevel: 100,
+        schoolMode: true, lastMathTime: 0, currentMathAns: 0
     };
 
     let scene, camera, renderer, player, road, obstacles = [], coins = [], speed = 0.25, baseSpeed = 0.25, frame = 0;
@@ -188,7 +205,8 @@
             obstacles.forEach(o => scene.remove(o)); coins.forEach(c => scene.remove(c));
             obstacles = []; coins = []; 
             state.score = 0; frame = 0; baseSpeed = diffSettings[state.difficulty].speed;
-            state.boostLevel = 100; state.isBoosting = false;
+            state.boostLevel = 100; state.isBoosting = false; state.isPaused = false;
+            state.lastMathTime = Date.now();
             player.position.x = 0;
             document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none');
             document.getElementById('game-ui').style.display = 'block';
@@ -196,6 +214,28 @@
             state.alive = true;
             if(state.animId) cancelAnimationFrame(state.animId);
             animate();
+        },
+        // School Edition Functions
+        triggerMath: () => {
+            if(!state.alive || state.isPaused) return;
+            state.isPaused = true;
+            const n1 = Math.floor(Math.random() * 12) + 1;
+            const n2 = Math.floor(Math.random() * 10) + 1;
+            state.currentMathAns = n1 * n2;
+            document.getElementById('math-question').innerText = `${n1} x ${n2}`;
+            document.getElementById('math-answer').value = "";
+            document.getElementById('school-overlay').style.display = "flex";
+            setTimeout(() => document.getElementById('math-answer').focus(), 10);
+        },
+        checkMath: () => {
+            const val = parseInt(document.getElementById('math-answer').value);
+            if(val === state.currentMathAns) {
+                document.getElementById('school-overlay').style.display = "none";
+                state.isPaused = false;
+                state.lastMathTime = Date.now();
+                window.focus();
+                animate();
+            }
         },
         checkCode: () => {
             if(document.getElementById('mod-code-input').value === "7123") {
@@ -245,7 +285,7 @@
             document.getElementById('mult-label').innerText = state.multiplier.toFixed(1);
         },
         quitToMenu: () => {
-            state.alive = false; cancelAnimationFrame(state.animId);
+            state.alive = false; state.isPaused = false; cancelAnimationFrame(state.animId);
             document.getElementById('btn-quit').style.display = 'none';
             document.getElementById('game-ui').style.display = 'none';
             window.ui.show('menu-main');
@@ -291,6 +331,11 @@
         window.ui.checkDaily();
         document.getElementById('best-val').innerText = state.highScore;
         window.addEventListener('mousedown', () => window.focus());
+        
+        // Math enter listener
+        document.getElementById('math-answer').addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') window.ui.checkMath();
+        });
     }
 
     function createPlayer() {
@@ -298,13 +343,9 @@
         const skin = shopItems.find(s => s.color === state.color);
         const group = new THREE.Group();
         const mat = new THREE.MeshStandardMaterial({ 
-            color: state.color, 
-            emissive: state.color, 
-            emissiveIntensity: 0.6, 
-            metalness: skin.type==='metal'?1:0.5,
-            roughness: skin.type==='metal'?0.1:0.5,
-            transparent: true, 
-            opacity: state.modGhost ? 0.5 : 1.0 
+            color: state.color, emissive: state.color, emissiveIntensity: 0.6, 
+            metalness: skin.type==='metal'?1:0.5, roughness: skin.type==='metal'?0.1:0.5,
+            transparent: true, opacity: state.modGhost ? 0.5 : 1.0 
         });
         group.add(new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.3, 1.2), mat));
         group.add(new THREE.Mesh(new THREE.BoxGeometry(2, 0.1, 0.6), mat));
@@ -314,9 +355,16 @@
     }
 
     function animate() {
-        if(!state.alive) return;
+        if(!state.alive || state.isPaused) return;
         state.animId = requestAnimationFrame(animate);
         frame++;
+
+        // School Mode Timer (30 sec)
+        if(state.schoolMode && Date.now() - state.lastMathTime > 30000) {
+            window.ui.triggerMath();
+            return;
+        }
+
         let d = diffSettings[state.difficulty];
         let ts = state.modSlowMo ? 0.4 : 1.0;
 
@@ -401,7 +449,17 @@
         document.getElementById('final-score').innerText = Math.floor(state.score);
     }
 
-    window.onkeydown = (e) => keys[e.key] = true;
+    window.onkeydown = (e) => {
+        keys[e.key] = true;
+        // School Keybinds
+        if(e.key.toLowerCase() === 'h') {
+            state.schoolMode = !state.schoolMode;
+            document.getElementById('school-status').innerText = `School Mode: ${state.schoolMode ? 'ON' : 'OFF'} (H to toggle, V for quick math)`;
+        }
+        if(e.key.toLowerCase() === 'v' && state.schoolMode) {
+            window.ui.triggerMath();
+        }
+    };
     window.onkeyup = (e) => keys[e.key] = false;
     window.onmousemove = (e) => mouseX = (e.clientX / window.innerWidth) * 2 - 1;
     
