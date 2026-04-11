@@ -6,35 +6,94 @@
     <title>DYLOKI | Shop</title>
     <link rel="stylesheet" href="/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Specifieke fix voor gecentreerd menu in de header */
+        .navbar {
+            display: flex;
+            justify-content: center; /* Zet alles in het midden */
+            align-items: center;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        /* Positioneer het logo links, maar houd de links in het midden */
+        .logo {
+            position: absolute;
+            left: 5%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px; /* Ruimte tussen de menu-items */
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--cyan);
+        }
+
+        .highlight-link {
+            color: var(--cyan) !important;
+            border-bottom: 2px solid var(--cyan);
+            padding-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
+
     <nav class="navbar">
         <div class="logo hover-glow" onclick="window.location.href='/'">DY<span>LOKI</span></div>
         <ul class="nav-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/games/">Games</a></li>
-            <li><a href="https://www.youtube.com/@matyou333" target="_blank">YouTube</a></li>
-            <li><a href="/shop/" class="highlight-link">Shop</a></li>
+            <li><a href="/">HOME</a></li>
+            <li><a href="/games/">GAMES</a></li>
+            <li><a href="https://www.youtube.com/@matyou333" target="_blank">YOUTUBE</a></li>
+            <li><a href="/shop/" class="highlight-link">SHOP</a></li>
         </ul>
     </nav>
 
-    <main class="container" style="text-align: center; padding-top: 50px;">
-        <h1 style="font-family: 'Syncopate';">UPGRADE_<span>ZONE</span></h1>
-        
-        <div id="shop-xp-display" class="btn-sub" style="margin: 30px auto; display: inline-block; padding: 10px 30px; border-color: var(--cyan); color: var(--cyan); font-weight: 800;">
-            SALDO: LADEN...
+    <header class="container" style="text-align: center; padding-top: 60px;">
+        <h1 style="font-family: 'Syncopate'; font-size: 2rem; letter-spacing: 4px;">UPGRADE_<span>ZONE</span></h1>
+        <p style="color: var(--text-muted); margin-top: 10px;">Geef je XP uit aan exclusieve extra's.</p>
+    </header>
+
+    <main class="container">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <div id="shop-xp-display" class="btn-sub" style="display: inline-block; padding: 12px 35px; border-color: var(--cyan); color: var(--cyan); font-weight: 800; font-size: 1.1rem; border-radius: 50px; background: rgba(0, 229, 255, 0.05);">
+                SALDO: LADEN...
+            </div>
         </div>
 
         <div class="grid">
-            <div class="mission-card interactive-border">
-                <div style="font-size: 2.5rem;">🏅</div>
-                <h3>BRONZE BADGE</h3>
+            <div class="mission-card interactive-border" style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 15px;">🏅</div>
+                <h3 style="font-size: 0.9rem; letter-spacing: 2px;">BRONZE BADGE</h3>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 20px;">Een icoon naast je naam.</p>
                 <button onclick="buyItem('Bronze Badge', 50)" class="btn-main" style="width: 100%;">50 XP</button>
             </div>
-            <div class="mission-card interactive-border">
-                <div style="font-size: 2.5rem;">🎨</div>
-                <h3>CYAN GLOW</h3>
+
+            <div class="mission-card interactive-border" style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 15px;">🎨</div>
+                <h3 style="font-size: 0.9rem; letter-spacing: 2px;">CYAN GLOW</h3>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 20px;">Krijg een glimmende naam.</p>
                 <button onclick="buyItem('Cyan Glow', 150)" class="btn-main" style="width: 100%;">150 XP</button>
+            </div>
+
+            <div class="mission-card interactive-border" style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 15px;">🔑</div>
+                <h3 style="font-size: 0.9rem; letter-spacing: 2px;">BETA TESTER</h3>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 20px;">Toegang tot nieuwe games.</p>
+                <button onclick="buyItem('Beta Access', 300)" class="btn-main" style="width: 100%;">300 XP</button>
             </div>
         </div>
     </main>
@@ -45,28 +104,28 @@
     </footer>
 
     <script>
-        // MOET EXACT HETZELFDE ZIJN ALS IN XP-SYSTEM.JS
-        const XP_STORAGE_KEY = 'user_total_xp';
+        // Gebruik de centrale sleutel
+        const XP_KEY = 'user_total_xp';
 
         function updateShop() {
-            const xp = localStorage.getItem(XP_STORAGE_KEY) || 0;
+            const xp = localStorage.getItem(XP_KEY) || 0;
             document.getElementById('shop-xp-display').innerText = `SALDO: ${xp} XP`;
         }
 
         function buyItem(name, price) {
-            let xp = parseInt(localStorage.getItem(XP_STORAGE_KEY)) || 0;
+            let xp = parseInt(localStorage.getItem(XP_KEY)) || 0;
             if (xp >= price) {
                 xp -= price;
-                localStorage.setItem(XP_STORAGE_KEY, xp);
-                alert(`Gekocht: ${name}!`);
+                localStorage.setItem(XP_KEY, xp);
+                alert(`Succes! Je hebt ${name} gekocht voor ${price} XP.`);
                 updateShop();
             } else {
-                alert("Niet genoeg XP!");
+                alert("Je hebt niet genoeg XP voor dit item!");
             }
         }
 
         window.onload = updateShop;
-        setInterval(updateShop, 1000); // Check elke seconde voor updates
+        setInterval(updateShop, 1000);
     </script>
 </body>
 </html>
