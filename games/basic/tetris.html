@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DYLOKI | Block Stack</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>canvas { border: 2px solid var(--cyan); background: #000; display: block; margin: 20px auto; }</style>
+</head>
+<body style="text-align: center; padding-top: 50px; background: #050505; color: white;">
+    <h1 style="font-family: 'Syncopate';">BLOCK STACK</h1>
+    <canvas id="tetris" width="240" height="400"></canvas>
+    <p style="color: var(--text-muted);">Pijltjestoetsen om te bewegen</p>
+    <a href="/games/" style="color: var(--cyan); text-decoration: none;">← Terug naar Games</a>
+    <script>
+        const canvas = document.getElementById('tetris');
+        const context = canvas.getContext('2d');
+        context.scale(20, 20);
+        function createMatrix(w, h) { return Array.from({length: h}, () => new Array(w).fill(0)); }
+        function draw() { context.fillStyle = '#000'; context.fillRect(0, 0, canvas.width, canvas.height); drawMatrix(arena, {x: 0, y: 0}); drawMatrix(player.matrix, player.pos); }
+        function drawMatrix(matrix, offset) { matrix.forEach((row, y) => { row.forEach((value, x) => { if (value !== 0) { context.fillStyle = '#00e5ff'; context.fillRect(x + offset.x, y + offset.y, 1, 1); } }); }); }
+        const arena = createMatrix(12, 20);
+        const player = { pos: {x: 5, y: 0}, matrix: [[0, 1, 0], [1, 1, 1], [0, 0, 0]] };
+        function update() { draw(); requestAnimationFrame(update); }
+        update();
+    </script>
+</body>
+</html>
