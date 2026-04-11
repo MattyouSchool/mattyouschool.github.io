@@ -3,29 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DYLOKI | Home</title>
+    <title>DYLOKI | Official Home</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Syncopate:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <nav class="navbar">
-        <div class="logo" onclick="window.location.href='index.html'">DY<span>LOKI</span></div>
+        <div class="logo hover-glow" onclick="window.location.href='index.html'">DY<span>LOKI</span></div>
+        
         <ul class="nav-links">
             <li><a href="index.html" class="highlight-link">Home</a></li>
             <li><a href="games/index.html">Games</a></li>
             <li><a href="https://www.youtube.com/@matyou333" target="_blank">YouTube</a></li>
             <li><a href="shop/index.html">Shop</a></li>
         </ul>
+
         <div class="nav-spacer"></div>
     </nav>
 
     <header class="hero-premium">
         <div class="hero-content">
+            <span class="eyebrow">MATTYOU STUDIOS™ PRESENTS</span>
             <h1 class="main-title">DY<span>LOKI</span></h1>
-            <p style="color: var(--text-muted); margin-bottom: 30px;">De hub voor Mattyou Studios content en premium web-ervaringen.</p>
+            <p class="hero-description">De standaard in high-performance gaming interfaces en exclusieve community content.</p>
             <div class="cta-group">
-                <a href="games/index.html" class="btn-main">BEKIJK GAMES</a>
-                <a href="shop/index.html" class="btn-sub">SHOP NU</a>
+                <a href="games/index.html" class="btn-main">EXPLORE GAMES</a>
+                <a href="shop/index.html" class="btn-sub">VISIT SHOP</a>
             </div>
         </div>
     </header>
@@ -34,28 +38,65 @@
         <section class="mission-grid">
             <div class="mission-card interactive-border">
                 <h3>STABILITEIT</h3>
-                <p style="font-size: 0.8rem; color: var(--text-muted);">Snelle en betrouwbare code binnen het Mattyou ecosysteem.</p>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Gebouwd op snelheid binnen het Mattyou ecosysteem.</p>
             </div>
             <div class="mission-card interactive-border">
                 <h3>XP SYSTEM</h3>
-                <p style="font-size: 0.8rem; color: var(--text-muted);">Verdien automatisch +10 XP voor elke minuut dat je online bent.</p>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Verdien elke minuut 10 XP door online te zijn.</p>
             </div>
             <div class="mission-card interactive-border">
-                <h3>UP-TO-DATE</h3>
-                <p style="font-size: 0.8rem; color: var(--text-muted);">Altijd de nieuwste games en mods van Mattyou Studios.</p>
+                <h3>COMMUNITY</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Word onderdeel van de Mattyou Studios groei.</p>
+            </div>
+        </section>
+
+        <section class="glass-panel interactive-border" style="margin-top: 50px; max-width: 600px; margin-left: auto; margin-right: auto;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h2 style="font-family: 'Syncopate'; font-size: 1rem; color: var(--cyan); letter-spacing: 2px;">MATTYOU STATUS</h2>
+                <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">Elke minuut op de site = +10 XP!</p>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <span style="font-weight: 800; font-size: 0.9rem;">RANK: <span id="rank-name" style="color: var(--cyan);">Laden...</span></span>
+                <span id="xp-counter" class="btn-sub" style="padding: 5px 15px; font-size: 0.8rem; border-color: var(--cyan); color: var(--cyan); border-radius: 15px;">0 XP</span>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.05); border-radius: 15px; height: 25px; width: 100%; overflow: hidden; position: relative; border: 1px solid var(--border-light);">
+                <div id="xp-bar" style="background: linear-gradient(90deg, var(--cyan), #00aaff); height: 100%; width: 0%; transition: width 1s ease;"></div>
+                <div id="xp-percentage" style="position: absolute; width: 100%; text-align: center; top: 3px; font-weight: 800; font-size: 0.7rem; text-shadow: 1px 1px 2px black;">0% naar 100 XP</div>
+            </div>
+
+            <div style="margin-top: 30px; display: grid; gap: 10px;">
+                <div id="feat-100" class="mission-card" style="padding: 15px; opacity: 0.3; font-size: 0.75rem; text-align: left; min-width: 100%;">
+                    🔒 100 XP: Mattyou Supporter Badge
+                </div>
+                <div id="feat-500" class="mission-card" style="padding: 15px; opacity: 0.3; font-size: 0.75rem; text-align: left; min-width: 100%;">
+                    🔒 500 XP: Discord Server Link
+                </div>
+                <div id="feat-1000" class="mission-card" style="padding: 15px; opacity: 0.3; font-size: 0.75rem; text-align: left; min-width: 100%;">
+                    🔒 1000 XP: VIP Alpha Features
+                </div>
+            </div>
+
+            <div style="margin-top: 25px; display: flex; gap: 10px;">
+                <input type="password" id="admin-code-input" placeholder="Voer code in..." style="flex-grow: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border-light); color: white; padding: 10px; border-radius: 15px; font-size: 0.7rem;">
+                <button onclick="checkAdminCode()" class="btn-main" style="padding: 10px 20px;">OK</button>
             </div>
         </section>
 
         <section class="glass-panel interactive-border" style="margin-top: 50px;">
             <h2 style="font-family: 'Syncopate'; font-size: 1rem; color: var(--cyan); margin-bottom: 15px;">OVER DYLOKI</h2>
             <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.8;">
-                Dyloki is het officiële Mattyou studios™ X Dylano progamma/platform
+                Dyloki is het officiële platform voor Mattyou Studios. Hier vind je onze nieuwste games, exclusieve shop-items en verdien je XP door simpelweg aanwezig te zijn. Ons doel is om een strakke, moderne omgeving te bieden voor de hele community.
             </p>
         </section>
     </main>
 
     <footer class="footer-main">
-        <p style="font-size: 0.8rem;">Made by <strong>Mattyou Studios™ x Dylano</strong></p>
+        <div class="footer-bottom">
+            <p>Made by <strong>Mattyou Studios™ x Dylano</strong></p>
+            <p style="font-size: 0.65rem; margin-top: 10px; opacity: 0.5;">&copy; 2026 ALL RIGHTS RESERVED.</p>
+        </div>
     </footer>
 
     <script src="xp-system.js"></script>
