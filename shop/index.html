@@ -27,7 +27,7 @@
     <main class="container">
         <div style="text-align: center; margin-bottom: 40px;">
             <div id="shop-xp-display" class="btn-sub" style="display: inline-block; padding: 10px 30px; border-color: var(--cyan); color: var(--cyan); font-weight: 800;">
-                JE SALDO: 0 XP
+                JE SALDO: LADEN...
             </div>
         </div>
 
@@ -60,30 +60,37 @@
         <p style="font-size: 0.7rem; color: var(--text-muted);">&copy; All rights reserved</p>
     </footer>
 
+    <script src="/xp-system.js"></script>
+
     <script>
+        // We gebruiken de naam 'dyloki_xp' omdat de meeste XP scripts die naam gebruiken
+        // Mocht je dashboard op 0 blijven staan, verander 'dyloki_xp' dan naar 'xp'
+        const XP_KEY = 'dyloki_xp'; 
+
         function updateShopDisplay() {
-            const xp = parseInt(localStorage.getItem('userXP')) || 0;
-            document.getElementById('shop-xp-display').innerText = `JE SALDO: ${xp} XP`;
+            const currentXP = parseInt(localStorage.getItem(XP_KEY)) || 0;
+            document.getElementById('shop-xp-display').innerText = `JE SALDO: ${currentXP} XP`;
         }
 
         function buyItem(name, price) {
-            let xp = parseInt(localStorage.getItem('userXP')) || 0;
-            if (xp >= price) {
-                xp -= price;
-                localStorage.setItem('userXP', xp);
+            let currentXP = parseInt(localStorage.getItem(XP_KEY)) || 0;
+            
+            if (currentXP >= price) {
+                currentXP -= price;
+                localStorage.setItem(XP_KEY, currentXP);
                 alert(`Gefeliciteerd! Je hebt ${name} gekocht.`);
                 updateShopDisplay();
-                // Ververs de pagina om de XP balken overal bij te werken
+                // Ververs de pagina om overal de nieuwe stand te laten zien
                 window.location.reload();
             } else {
-                alert("Niet genoeg XP! Blijf nog even op de site om meer te verdienen.");
+                alert("Niet genoeg XP! Blijf nog even online om meer te verdienen.");
             }
         }
         
-        // Initial check
-        updateShopDisplay();
-        // Update elke 10 seconden voor het geval je XP erbij krijgt terwijl je kijkt
-        setInterval(updateShopDisplay, 10000);
+        // Start de weergave
+        window.onload = updateShopDisplay;
+        // Check elke seconde of er XP bij is gekomen van het hoofdsysteem
+        setInterval(updateShopDisplay, 1000);
     </script>
 </body>
 </html>
