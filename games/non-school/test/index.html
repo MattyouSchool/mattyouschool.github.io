@@ -2,32 +2,42 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Rocket JS - Bots & Jumping</title>
+    <title>Rocket JS - Pro Edition</title>
     <style>
-        body { margin: 0; overflow: hidden; background: #000; font-family: 'Arial Black', sans-serif; }
+        body { margin: 0; overflow: hidden; background: #000; font-family: 'Segoe UI', sans-serif; }
         #menu {
-            position: absolute; inset: 0; background: radial-gradient(circle, #222, #000);
+            position: absolute; inset: 0; background: radial-gradient(circle, #1a1a2e, #16213e);
             display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; z-index: 100;
         }
         #ui {
             position: absolute; top: 20px; width: 100%; text-align: center;
             color: white; display: none; pointer-events: none; z-index: 10;
         }
-        #scoreboard { font-size: 32px; background: rgba(0,0,0,0.7); padding: 10px 30px; border-radius: 50px; border: 3px solid #fff; }
-        button { padding: 20px 50px; font-size: 24px; cursor: pointer; background: #ffaa00; border: none; color: white; border-radius: 10px; font-weight: bold; }
-        button:hover { background: #fff; color: #000; }
+        #scoreboard { 
+            font-size: 32px; background: rgba(0,0,0,0.8); padding: 10px 40px; 
+            border-radius: 50px; border: 2px solid #444; box-shadow: 0 0 20px rgba(0,188,255,0.3);
+        }
+        button { 
+            padding: 20px 60px; font-size: 28px; cursor: pointer; background: #e94560; 
+            border: none; color: white; border-radius: 15px; font-weight: bold; transition: 0.3s;
+        }
+        button:hover { transform: scale(1.1); box-shadow: 0 0 30px #e94560; }
     </style>
 </head>
 <body>
 
 <div id="menu">
-    <h1 style="color: #00bcff; font-size: 50px;">ROCKET JS BOTS</h1>
-    <p>WASD: Rijden | SPATIE: Springen | SHIFT: Dash (Schieten)</p>
-    <button id="startBtn">START MATCH</button>
+    <h1 style="font-size: 70px; margin-bottom: 0; text-shadow: 0 0 20px #00bcff;">ROCKET JS</h1>
+    <p style="opacity: 0.7; margin-bottom: 30px;">WASD: Rijden | SPATIE: Springen | SHIFT: Boost</p>
+    <button id="startBtn">PLAY MATCH</button>
 </div>
 
 <div id="ui">
-    <div id="scoreboard"><span id="s1" style="color:#00bcff">0</span> - <span id="s2" style="color:#ffaa00">0</span></div>
+    <div id="scoreboard">
+        <span id="s1" style="color:#00bcff">0</span> 
+        <span style="margin: 0 20px; opacity: 0.5;">VS</span> 
+        <span id="s2" style="color:#e94560">0</span>
+    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -46,22 +56,23 @@ document.getElementById('startBtn').onclick = () => {
 };
 
 function init() {
-    // 1. Scene & Physics
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0a0a0a);
+    scene.background = new THREE.Color(0x0f3460);
     world = new CANNON.World();
-    world.gravity.set(0, -15, 0); // Iets sterkere zwaartekracht voor snellere actie
+    world.gravity.set(0, -20, 0);
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
     document.body.appendChild(renderer.domElement);
 
-    // 2. Grond & Veldbegrenzing
-    const groundGeo = new THREE.PlaneGeometry(60, 110);
-    const groundMat = new THREE.MeshPhongMaterial({ color: 0x113311 });
+    // Arena met muren
+    const groundGeo = new THREE.PlaneGeometry(80, 140);
+    const groundMat = new THREE.MeshStandardMaterial({ color: 0x16213e, roughness: 0.8 });
     const ground = new THREE.Mesh(groundGeo, groundMat);
     ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
     scene.add(ground);
 
     const groundBody = new CANNON.Body({ mass: 0 });
@@ -69,54 +80,62 @@ function init() {
     groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0), -Math.PI/2);
     world.addBody(groundBody);
 
-    // 3. Bal
-    const ballGeo = new THREE.SphereGeometry(1.8, 24, 24);
-    const ballMat = new THREE.MeshPhongMaterial({ color: 0xffffff });
+    // Bal (Metallic Look)
+    const ballGeo = new THREE.SphereGeometry(2, 32, 32);
+    const ballMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.5, roughness: 0.2 });
     ball = new THREE.Mesh(ballGeo, ballMat);
+    ball.castShadow = true;
     scene.add(ball);
 
-    ballBody = new CANNON.Body({ mass: 0.8, shape: new CANNON.Sphere(1.8) });
-    ballBody.position.set(0, 5, 0);
-    ballBody.linearDamping = 0.2;
+    ballBody = new CANNON.Body({ mass: 1.2, shape: new CANNON.Sphere(2) });
+    ballBody.position.set(0, 10, 0);
+    ballBody.linearDamping = 0.3;
+    ballBody.angularDamping = 0.3;
     world.addBody(ballBody);
 
-    // 4. Speler Auto
-    playerBody = createCarBody(0, 2, 40);
+    // Player
+    playerBody = createCarBody(0, 2, 50);
     playerCar = createCarMesh(0x00bcff);
     world.addBody(playerBody);
     scene.add(playerCar);
 
-    // 5. Bots toevoegen (2 bots)
-    createBot(-10, -40);
-    createBot(10, -40);
+    // Bots (Team Rood)
+    createBot(-15, -50);
+    createBot(15, -50);
 
-    // Licht
-    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    // Verlichting
+    const ambient = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambient);
-    const sun = new THREE.DirectionalLight(0xffffff, 1);
-    sun.position.set(20, 50, 10);
-    scene.add(sun);
+    const light = new THREE.PointLight(0xffffff, 1, 200);
+    light.position.set(0, 50, 0);
+    light.castShadow = true;
+    scene.add(light);
 
     animate();
 }
 
 function createCarBody(x, y, z) {
-    const body = new CANNON.Body({ mass: 5 });
-    body.addShape(new CANNON.Box(new CANNON.Vec3(1.2, 0.6, 2)));
+    const body = new CANNON.Body({ mass: 10 }); // Zwaarder voor stabiliteit
+    body.addShape(new CANNON.Box(new CANNON.Vec3(1.5, 0.7, 2.5)));
     body.position.set(x, y, z);
-    body.angularDamping = 0.9; // Voorkomt dat de auto oneindig rondtolt
+    body.linearDamping = 0.5;
+    body.angularDamping = 0.9;
     return body;
 }
 
 function createCarMesh(color) {
-    const carGeo = new THREE.BoxGeometry(2.4, 1.2, 4);
-    const carMat = new THREE.MeshPhongMaterial({ color: color });
-    return new THREE.Mesh(carGeo, carMat);
+    const carGroup = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.BoxGeometry(3, 1.2, 5), new THREE.MeshStandardMaterial({ color }));
+    body.castShadow = true;
+    const roof = new THREE.Mesh(new THREE.BoxGeometry(2, 0.8, 2), new THREE.MeshStandardMaterial({ color: 0x333333 }));
+    roof.position.y = 1;
+    carGroup.add(body, roof);
+    return carGroup;
 }
 
 function createBot(x, z) {
     const bBody = createCarBody(x, 2, z);
-    const bMesh = createCarMesh(0xffaa00);
+    const bMesh = createCarMesh(0xe94560);
     world.addBody(bBody);
     scene.add(bMesh);
     bots.push({ body: bBody, mesh: bMesh });
@@ -125,47 +144,61 @@ function createBot(x, z) {
 window.onkeydown = (e) => keys[e.code] = true;
 window.onkeyup = (e) => keys[e.code] = false;
 
+function handleCarPhysics(body, mesh, isPlayer) {
+    // 1. Anti-omrol systeem: Forceer auto rechtop
+    const up = new CANNON.Vec3(0, 1, 0);
+    const carUp = body.quaternion.vmult(new CANNON.Vec3(0, 1, 0));
+    const dot = up.dot(carUp);
+    if (dot < 0.7) { // Als hij te veel kantelt
+        const angle = Math.acos(dot);
+        const axis = up.cross(carUp).unit();
+        body.angularVelocity.x -= axis.x * angle * 0.5;
+        body.angularVelocity.z -= axis.z * angle * 0.5;
+    }
+
+    // 2. Mesh synchroniseren
+    mesh.position.copy(body.position);
+    mesh.quaternion.copy(body.quaternion);
+}
+
 function updatePlayer() {
-    const force = 40;
-    const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(playerCar.quaternion);
+    const force = keys['ShiftLeft'] ? 100 : 60;
+    const q = playerBody.quaternion;
+    const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(new THREE.Quaternion(q.x, q.y, q.z, q.w));
 
     if (keys['KeyW'] || keys['ArrowUp']) {
-        playerBody.velocity.x += forward.x * force * 0.016;
-        playerBody.velocity.z += forward.z * force * 0.016;
+        playerBody.applyForce(new CANNON.Vec3(forward.x * force, 0, forward.z * force), playerBody.position);
     }
     if (keys['KeyS'] || keys['ArrowDown']) {
-        playerBody.velocity.x -= forward.x * force * 0.016;
-        playerBody.velocity.z -= forward.z * force * 0.016;
+        playerBody.applyForce(new CANNON.Vec3(-forward.x * force, 0, -forward.z * force), playerBody.position);
     }
-    if (keys['KeyA'] || keys['ArrowLeft']) playerBody.angularVelocity.y = 2.5;
-    else if (keys['KeyD'] || keys['ArrowRight']) playerBody.angularVelocity.y = -2.5;
-    else playerBody.angularVelocity.y = 0;
+    if (keys['KeyA'] || keys['ArrowLeft']) playerBody.angularVelocity.y = 3;
+    else if (keys['KeyD'] || keys['ArrowRight']) playerBody.angularVelocity.y = -3;
+    else playerBody.angularVelocity.y *= 0.9;
 
-    // Springen (Check of de auto dicht bij de grond is)
-    if (keys['Space'] && Math.abs(playerBody.position.y) < 1.5) {
-        playerBody.velocity.y = 8;
-        keys['Space'] = false; // Voorkom "vliegen" door ingedrukt te houden
-    }
-
-    // Dash / Schieten (Shift)
-    if (keys['ShiftLeft'] || keys['ShiftRight']) {
-        playerBody.velocity.x += forward.x * 2;
-        playerBody.velocity.z += forward.z * 2;
+    if (keys['Space'] && playerBody.position.y < 1.2) {
+        playerBody.velocity.y = 10;
+        keys['Space'] = false;
     }
 }
 
-function updateBots() {
+function updateAI() {
     bots.forEach(bot => {
-        // Simpele AI: Beweeg richting de bal
-        const dx = ballBody.position.x - bot.body.position.x;
-        const dz = ballBody.position.z - bot.body.position.z;
-        
-        bot.body.velocity.x += dx * 0.02;
-        bot.body.velocity.z += dz * 0.02;
-        
-        // Laat de bot naar de bal kijken
-        bot.mesh.lookAt(ball.position);
-        bot.body.quaternion.copy(bot.mesh.quaternion);
+        // AI Logica: Ga naar de bal
+        const toBall = new CANNON.Vec3(
+            ballBody.position.x - bot.body.position.x,
+            0,
+            ballBody.position.z - bot.body.position.z
+        );
+        const dist = toBall.length();
+        toBall.normalize();
+
+        if (dist > 5) {
+            bot.body.applyForce(new CANNON.Vec3(toBall.x * 40, 0, toBall.z * 40), bot.body.position);
+            // Laat de bot "kijken" naar de bal
+            const angle = Math.atan2(toBall.x, toBall.z);
+            bot.body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), angle + Math.PI);
+        }
     });
 }
 
@@ -173,44 +206,35 @@ function animate() {
     requestAnimationFrame(animate);
     world.step(1/60);
 
-    // Update Player Visuals
-    playerCar.position.copy(playerBody.position);
-    playerCar.quaternion.copy(playerBody.quaternion);
+    handleCarPhysics(playerBody, playerCar, true);
+    bots.forEach(b => handleCarPhysics(b.body, b.mesh, false));
     
-    // Update Ball Visuals
     ball.position.copy(ballBody.position);
     ball.quaternion.copy(ballBody.quaternion);
 
-    // Update Bots Visuals
-    bots.forEach(bot => {
-        bot.mesh.position.copy(bot.body.position);
-        bot.mesh.quaternion.copy(bot.body.quaternion);
-    });
-
     updatePlayer();
-    updateBots();
+    updateAI();
 
-    // Camera volgt speler
-    const camPos = new THREE.Vector3(0, 7, 15).applyQuaternion(playerCar.quaternion);
-    camera.position.lerp(new THREE.Vector3().copy(playerCar.position).add(camPos), 0.1);
-    camera.lookAt(playerCar.position);
+    // Smooth Camera
+    const idealOffset = new THREE.Vector3(0, 8, 18).applyQuaternion(playerCar.quaternion);
+    const targetCamPos = new THREE.Vector3().copy(playerCar.position).add(idealOffset);
+    camera.position.lerp(targetCamPos, 0.1);
+    camera.lookAt(playerCar.position.x, playerCar.position.y + 2, playerCar.position.z);
 
-    // Goal Check
-    if (ballBody.position.z > 55) goal(1);  // Oranje scoort
-    if (ballBody.position.z < -55) goal(0); // Blauw scoort
+    // Goals
+    if (ballBody.position.z > 65) resetMatch(1);
+    if (ballBody.position.z < -65) resetMatch(0);
 
     renderer.render(scene, camera);
 }
 
-function goal(team) {
+function resetMatch(team) {
     score[team]++;
     document.getElementById('s1').innerText = score[0];
     document.getElementById('s2').innerText = score[1];
-    
-    // Reset posities
     ballBody.position.set(0, 10, 0);
     ballBody.velocity.set(0, 0, 0);
-    playerBody.position.set(0, 2, 40);
+    playerBody.position.set(0, 2, 50);
     playerBody.velocity.set(0, 0, 0);
 }
 </script>
