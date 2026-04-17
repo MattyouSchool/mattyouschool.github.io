@@ -2,30 +2,183 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>JS Rocket League 3D</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Rocket JS - Pro Edition</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; font-family: 'Arial Black', sans-serif; }
+        #ui {
+            position: absolute; top: 20px; width: 100%; text-align: center;
+            color: white; pointer-events: none; text-shadow: 2px 2px 4px #000;
+        }
+        #scoreboard { font-size: 40px; background: rgba(0,0,0,0.6); display: inline-block; padding: 10px 30px; border-radius: 50px; border: 2px solid #fff; }
+        #menu {
+            position: absolute; inset: 0; background: radial-gradient(circle, #222, #000);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; z-index: 10;
+        }
+        button {
+            padding: 15px 40px; font-size: 20px; cursor: pointer; background: #ffaa00;
+            border: none; border-radius: 10px; font-weight: bold; transition: 0.2s;
+        }
+        button:hover { transform: scale(1.1); background: #fff; }
+        input { padding: 10px; width: 60px; border-radius: 5px; border: none; margin: 10px; }
+    </style>
 </head>
 <body>
-    <div id="menu">
-        <h1>ROCKET JS</h1>
-        <label>Tijd (min): <input type="number" id="gameTime" value="5" min="1"></label><br>
-        <label>Bots per team: <input type="number" id="botCount" value="1" min="0" max="3"></label><br>
-        <button id="startBtn">START GAME</button>
-    </div>
 
-    <div id="ui" style="display:none;">
-        <div id="scoreBoard">BLAUW: 0 - ORANJE: 0</div>
-        <div id="timer">05:00</div>
+<div id="menu">
+    <h1 style="font-size: 60px; color: #00bcff; margin-bottom: 10px;">ROCKET JS</h1>
+    <p>Besturing: WASD / Pijltjes</p>
+    <div style="margin-bottom: 20px;">
+        <label>Minuten: <input type="number" id="timeInput" value="3"></label>
+        <label>Bots: <input type="number" id="botInput" value="1" max="3"></label>
     </div>
+    <button onclick="startGame()">START MATCH</button>
+</div>
 
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "cannon": "https://unpkg.com/cannon-es@0.20.0/dist/cannon-es.js"
-            }
-        }
-    </script>
-    <script type="module" src="game.js"></script>
+<div id="ui" style="display:none;">
+    <div id="scoreboard"><span style="color:#00bcff">0</span> - <span style="color:#ffaa00">0</span></div>
+    <div id="timer" style="font-size: 20px; margin-top: 10px;">03:00</div>
+</div>
+
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "cannon": "https://cdn.skypack.dev/cannon-es"
+    }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import * as CANNON from 'cannon';
+
+let scene, camera, renderer, world, ball, ballBody, car, carBody;
+let score = [0, 0];
+const keys = {};
+
+window.startGame = function() {
+    document.getElementById('menu').style.display = 'none';
+    document.getElementById('ui').style.display = 'block';
+    init();
+}
+
+function init() {
+    // --- 1. SCENE & RENDERER ---
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x050505);
+    
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    document.body.appendChild(renderer.domElement);
+
+    // --- 2. PHYSICS WORLD ---
+    world = new CANNON.World();
+    world.gravity.set(0, -9.82, 0);
+
+    // --- 3. HET VELD ---
+    // Grond
+    const groundMat = new THREE.MeshPhongMaterial({ color: 0x1a4a1a });
+    const ground = new THREE.Mesh(new THREE.BoxGeometry(60, 1, 100), groundMat);
+    ground.position.y = -0.5;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    const groundBody = new CANNON.Body({ mass: 0, shape: new CANNON.Box(new CANNON.Vec3(30, 0.5, 50)) });
+    world.addBody(groundBody);
+
+    // Goals
+    createGoal(0, 50, 0x00bcff);  // Team Blauw
+    createGoal(0, -50, 0ffaa00); // Team Oranje
+
+    // --- 4. DE BAL ---
+    const ballGeo = new THREE.SphereGeometry(1.5, 32, 32);
+    const ballMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.3, roughness: 0.4 });
+    ball = new THREE.Mesh(ballGeo, ballMat);
+    ball.castShadow = true;
+    scene.add(ball);
+
+    ballBody = new CANNON.Body({ 
+        mass: 1, 
+        shape: new CANNON.Sphere(1.5),
+        material: new CANNON.Material({ restitution: 0.9 }) 
+    });
+    ballBody.position.set(0, 5, 0);
+    world.addBody(ballBody);
+
+    // --- 5. DE AUTO ---
+    const carGeo = new THREE.BoxGeometry(2, 1, 4);
+    const carMat = new THREE.MeshStandardMaterial({ color: 0x00bcff });
+    car = new THREE.Mesh(carGeo, carMat);
+    car.castShadow = true;
+    scene.add(car);
+
+    carBody = new CANNON.Body({ mass: 5, shape: new CANNON.Box(new CANNON.Vec3(1, 0.5, 2)) });
+    carBody.position.set(0, 1, 40);
+    world.addBody(carBody);
+
+    // --- 6. LICHT ---
+    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambient);
+    const spot = new THREE.SpotLight(0xffffff, 1000);
+    spot.position.set(0, 50, 0);
+    spot.castShadow = true;
+    scene.add(spot);
+
+    animate();
+}
+
+function createGoal(x, z, color) {
+    const goalGeo = new THREE.BoxGeometry(15, 8, 2);
+    const goalMat = new THREE.MeshBasicMaterial({ color: color, wireframe: true });
+    const goal = new THREE.Mesh(goalGeo, goalMat);
+    goal.position.set(x, 4, z);
+    scene.add(goal);
+}
+
+window.addEventListener('keydown', (e) => keys[e.code] = true);
+window.addEventListener('keyup', (e) => keys[e.code] = false);
+
+function updateLogic() {
+    const speed = 0.5;
+    if (keys['KeyW'] || keys['ArrowUp']) carBody.applyLocalForce(new CANNON.Vec3(0, 0, -50), new CANNON.Vec3(0, 0, 0));
+    if (keys['KeyS'] || keys['ArrowDown']) carBody.applyLocalForce(new CANNON.Vec3(0, 0, 50), new CANNON.Vec3(0, 0, 0));
+    if (keys['KeyA'] || keys['ArrowLeft']) carBody.angularVelocity.y = 2;
+    if (keys['KeyD'] || keys['ArrowRight']) carBody.angularVelocity.y = -2;
+
+    // Camera volgt auto
+    const offset = new THREE.Vector3(0, 6, 12);
+    offset.applyQuaternion(car.quaternion);
+    camera.position.copy(car.position).add(offset);
+    camera.lookAt(car.position);
+
+    // Goal detectie
+    if (ballBody.position.z > 50) resetRound(1);
+    if (ballBody.position.z < -50) resetRound(0);
+}
+
+function resetRound(teamIndex) {
+    score[teamIndex]++;
+    document.getElementById('scoreboard').innerHTML = `<span style="color:#00bcff">${score[0]}</span> - <span style="color:#ffaa00">${score[1]}</span>`;
+    ballBody.position.set(0, 5, 0);
+    ballBody.velocity.set(0, 0, 0);
+    carBody.position.set(0, 1, 40);
+    carBody.velocity.set(0, 0, 0);
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    world.fixedStep();
+
+    ball.position.copy(ballBody.position);
+    ball.quaternion.copy(ballBody.quaternion);
+    car.position.copy(carBody.position);
+    car.quaternion.copy(carBody.quaternion);
+
+    updateLogic();
+    renderer.render(scene, camera);
+}
+</script>
 </body>
 </html>
